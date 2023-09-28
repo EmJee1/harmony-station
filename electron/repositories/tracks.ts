@@ -1,18 +1,18 @@
-import { Track } from '../../types/tracks'
+import { DbTrack, Track } from '../../types/tracks'
+import { getDatabase } from './database'
 
-export async function getTracks(): Promise<Track[]> {
-  return [
-    {
-      id: '1',
-      path: '/home/alex/Music/01 - The Beatles - Come Together.mp3',
-      title: 'Come Together',
-      albumArtist: 'The Beatles',
-      artists: ['The Beatles'],
-      genre: 'Rock',
-      album: 'Abbey Road',
-      year: 1969,
-      trackTotal: 17,
-      trackNumber: 1,
-    },
-  ]
+export async function getTracks(): Promise<DbTrack[]> {
+  return getDatabase('tracks').find({})
+}
+
+export async function addTracks(track: Track[]): Promise<void> {
+  await getDatabase('tracks').insertMany<Track>(track)
+}
+
+export async function clearTracks(): Promise<void> {
+  await getDatabase('tracks').remove({}, { multi: true })
+}
+
+export async function compactTracks(): Promise<void> {
+  getDatabase('tracks').persistence.compactDatafile()
 }

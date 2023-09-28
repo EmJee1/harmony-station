@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
 import type { Track } from '../../types/tracks'
 
@@ -15,11 +15,6 @@ export const useTracksStore = defineStore('tracks', () => {
   async function fetchTracks() {
     tracks.value = await window.electronAPI.getTracks()
   }
-
-  watch(
-    () => tracks.value,
-    tracks => console.log(tracks)
-  )
 
   return {
     tracks,

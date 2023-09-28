@@ -1,12 +1,18 @@
-import { readdir } from 'node:fs/promises'
+import readdirp, { ReaddirpOptions } from 'readdirp'
 
-const ALLOWED_FILE_EXTENSIONS = ['mp3', 'flac']
+const TRACK_FILE_EXTENSIONS = ['mp3', 'flac']
+const TRACK_SCAN_DEPTH = 5
 
-export async function scanMusicFilesInFolder(path: string) {
-  const files = await readdir(path, {
-    recursive: true,
-    withFileTypes: true,
-  })
+export async function scanMusicFilesInFolder(directory: string) {
+  const readdirpOptions: ReaddirpOptions = {
+    fileFilter: TRACK_FILE_EXTENSIONS.map(extension => `*.${extension}`),
+    depth: TRACK_SCAN_DEPTH,
+  }
 
-  return files.filter(file => ALLOWED_FILE_EXTENSIONS.includes(file.name))
+  const files = []
+  for await (const entry of readdirp(directory, readdirpOptions)) {
+    files.push(entry.fullPath)
+  }
+
+  return files
 }

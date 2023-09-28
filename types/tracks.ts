@@ -1,15 +1,15 @@
-export interface TrackMetadata {
+export interface Track {
+  path: string
   title?: string
   albumArtist?: string
-  artists?: string[]
-  genre?: string
+  artists: string[]
+  genre: string[]
   album?: string
   year?: number
   trackTotal?: number
   trackNumber?: number
 }
 
-export interface Track extends TrackMetadata {
+export interface DbTrack extends Track {
   id: string
-  path: string
 }

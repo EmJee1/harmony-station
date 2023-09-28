@@ -1,7 +1,14 @@
 import path from 'node:path'
 import { app, ipcMain, BrowserWindow } from 'electron'
 import { getSettings } from './repositories/settings'
-import { getTracks } from './repositories/tracks'
+import {
+  addTracks,
+  clearTracks,
+  compactTracks,
+  getTracks,
+} from './repositories/tracks'
+import { scanMusicFilesInFolder } from './utils/files'
+import { getMetadataForMusicFiles } from './utils/metadata'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -49,6 +56,15 @@ app.on('activate', () => {
 app.whenReady().then(() => {
   ipcMain.handle('get:settings', getSettings)
   ipcMain.handle('get:tracks', getTracks)
+  ipcMain.handle('scan-tracks', async () => {
+    const settings = await getSettings()
+    await clearTracks()
+    const files = await scanMusicFilesInFolder(settings.audioDirectories.at(0))
+    const metadata = await getMetadataForMusicFiles(files)
+    await addTracks(metadata)
+    await compactTracks()
+    console.log('done')
+  })
 
   createWindow()
 })

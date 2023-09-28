@@ -4,6 +4,7 @@ import type { Track } from '../types/tracks'
 export interface IElectronAPI {
   getSettings: () => Promise<Settings>
   getTracks: () => Promise<Track[]>
+  scanTracks: () => Promise<void>
 }
 
 declare global {
