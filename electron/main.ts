@@ -9,6 +9,7 @@ import {
 } from './repositories/tracks'
 import { scanMusicFilesInFolder } from './utils/files'
 import { getMetadataForMusicFiles } from './utils/metadata'
+import { getAlbumsFromTracks } from './utils/albums'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -56,6 +57,10 @@ app.on('activate', () => {
 app.whenReady().then(() => {
   ipcMain.handle('get:settings', getSettings)
   ipcMain.handle('get:tracks', getTracks)
+  ipcMain.handle('get:albums', async () => {
+    const tracks = await getTracks()
+    return getAlbumsFromTracks(tracks)
+  })
   ipcMain.handle('scan-tracks', async () => {
     const settings = await getSettings()
     await clearTracks()
@@ -63,7 +68,6 @@ app.whenReady().then(() => {
     const metadata = await getMetadataForMusicFiles(files)
     await addTracks(metadata)
     await compactTracks()
-    console.log('done')
   })
 
   createWindow()
