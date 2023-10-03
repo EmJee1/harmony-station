@@ -1,21 +1,17 @@
 import { app } from 'electron'
-import Datastore from 'nedb-promises'
+import knex from 'knex'
 import { getValueForEnvironment } from '../utils/environment'
-import type { DbTrack } from '../../types/tracks'
-import type { Settings } from '../../types/settings'
 
-type Database = DbTrack | Settings
-
-export function getDatabase<T extends Database>(
-  database: 'settings' | 'tracks'
-): Datastore<T> {
+export function getDatabase() {
   const dbPath = getValueForEnvironment({
     development: './.data',
     production: app.getPath('appData'),
   })
 
-  return Datastore.create({
-    filename: `${dbPath}/${database}.db`,
-    autoload: true,
+  return knex({
+    client: 'sqlite3',
+    connection: {
+      filename: `${dbPath}/database.sqlite`,
+    },
   })
 }

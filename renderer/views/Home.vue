@@ -3,9 +3,9 @@
   <button class="border border-amber-800 px-2 py-1" @click="onScan">
     Scan files
   </button>
-  <h3>Recently added tracks</h3>
+  <h3>Tracks</h3>
   <div v-for="track in tracksStore.tracks">
-    <p>{{ track.title }} - by {{ track.artists.join(', ') }}</p>
+    <p>{{ track.title }} - {{ track.genre }}</p>
   </div>
 </template>
 

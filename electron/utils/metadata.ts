@@ -1,31 +1,14 @@
 import { parseFile, selectCover } from 'music-metadata'
 import type { Track } from '../../types/tracks'
 
-const ARTIST_TAG_SEPARATOR = '; '
-
-export async function getMetadataForMusicFile(path: string): Promise<Track> {
+export async function getMetadataForMusicFile(path: string) {
   const metadata = await parseFile(path)
-
-  // TODO: save cover to file
-  const cover = selectCover(metadata.common.picture)
-
-  const artists = metadata.common.artists.flatMap(artist => {
-    return artist.split(ARTIST_TAG_SEPARATOR)
-  })
-  const trackTotal = metadata.common.totaltracks
-    ? Number(metadata.common.totaltracks)
-    : metadata.common.track.of
 
   return {
     path,
     title: metadata.common.title,
-    albumArtist: metadata.common.albumartist,
-    artists,
-    genre: metadata.common.genre,
-    album: metadata.common.album,
+    genre: metadata.common.genre.at(0),
     year: metadata.common.year,
-    trackTotal,
-    trackNumber: metadata.common.track.no,
   }
 }
 

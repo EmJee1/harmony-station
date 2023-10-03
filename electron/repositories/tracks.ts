@@ -1,18 +1,15 @@
 import { DbTrack, Track } from '../../types/tracks'
 import { getDatabase } from './database'
 
-export async function getTracks(): Promise<DbTrack[]> {
-  return getDatabase('tracks').find({})
+export async function getTracks() {
+  return getDatabase()('tracks')
 }
 
-export async function addTracks(track: Track[]): Promise<void> {
-  await getDatabase('tracks').insertMany<Track>(track)
+export async function addTracks(tracks: Track[]) {
+  // https://knexjs.org/guide/utility.html#batchinsert
+  return getDatabase().batchInsert('tracks', tracks, 500)
 }
 
-export async function clearTracks(): Promise<void> {
-  await getDatabase('tracks').remove({}, { multi: true })
-}
-
-export async function compactTracks(): Promise<void> {
-  getDatabase('tracks').persistence.compactDatafile()
+export async function clearTracks() {
+  return getDatabase()('tracks').delete()
 }

@@ -8,9 +8,9 @@ import { useSettingsStore } from './stores/settings-store'
 import { useTracksStore } from './stores/tracks-store'
 
 const { fetchSettings } = useSettingsStore()
-const { fetchTracks, fetchAlbums } = useTracksStore()
+const { fetchTracks } = useTracksStore()
 
 onMounted(async () => {
-  await Promise.all([fetchSettings(), fetchTracks(), fetchAlbums()])
+  await Promise.all([fetchSettings(), fetchTracks()])
 })
 </script>
