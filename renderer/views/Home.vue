@@ -4,13 +4,23 @@
     Scan files
   </button>
   <h3>Tracks</h3>
-  <div v-for="track in tracksStore.tracks">
-    <p>{{ track.title }} - {{ track.genre }}</p>
-  </div>
+  <Carousel>
+    <Card
+      v-for="track in tracksStore.tracks"
+      :title="track.title"
+      to="/"
+      image="#"
+      class="w-48 min-w-[12rem]"
+    >
+      {{ track.title }}
+    </Card>
+  </Carousel>
 </template>
 
 <script lang="ts" setup>
 import { useTracksStore } from '../stores/tracks-store'
+import Carousel from '../components/Carousel.vue'
+import Card from '../components/Card.vue'
 
 const tracksStore = useTracksStore()
 
