@@ -13,5 +13,6 @@ export function getDatabase() {
     connection: {
       filename: `${dbPath}/database.sqlite`,
     },
+    useNullAsDefault: true,
   })
 }
