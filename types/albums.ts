@@ -1,4 +1,7 @@
 export interface Album {
   title: string
-  tracks: string[]
+}
+
+export interface DbAlbum extends Album {
+  id: string
 }

@@ -2,14 +2,7 @@ import { parseFile, selectCover } from 'music-metadata'
 import type { Track } from '../../types/tracks'
 
 export async function getMetadataForMusicFile(path: string) {
-  const metadata = await parseFile(path)
-
-  return {
-    path,
-    title: metadata.common.title,
-    genre: metadata.common.genre.at(0),
-    year: metadata.common.year,
-  }
+  return parseFile(path)
 }
 
 export async function getMetadataForMusicFiles(paths: string[]) {
