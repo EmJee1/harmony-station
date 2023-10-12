@@ -1,4 +1,4 @@
-import { DbTrack, Track } from '../../types/tracks'
+import type { Track } from '../../types/tracks'
 import { getDatabase } from './database'
 
 export async function getTracks() {
