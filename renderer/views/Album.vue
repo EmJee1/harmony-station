@@ -12,16 +12,20 @@
         </Typography>
       </div>
     </div>
-    <ul class="mt-8">
-      <li v-for="(track, index) in tracks" :key="track.id">
-        <button @click="onPlay(track)">Play</button> {{ index + 1 }}
-        {{ track.title }}
+    <ul class="mt-8 space-y-4">
+      <li v-for="(track, index) in tracks" :key="track.id" class="flex gap-2">
+        <ButtonIcon @click="onPlay(track)">
+          <PlayIcon />
+        </ButtonIcon>
+        <span>#{{ index + 1 }}</span>
+        <span>{{ track.title }}</span>
       </li>
     </ul>
   </template>
 </template>
 
 <script setup lang="ts">
+import PlayIcon from '@heroicons/vue/24/outline/PlayIcon'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { DbTrack } from '../../types/tracks'
@@ -29,6 +33,7 @@ import type { DbAlbum } from '../../types/albums'
 import type { DbArtist } from '../../types/artist'
 import { usePlayingStore } from '../stores/playing-store'
 import Typography from '../components/Typography.vue'
+import ButtonIcon from '../components/ButtonIcon.vue'
 
 const route = useRoute()
 const playingStore = usePlayingStore()
