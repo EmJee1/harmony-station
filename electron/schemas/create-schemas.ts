@@ -10,7 +10,7 @@ export async function createSchemas() {
 
   if (!(await tableExists('tracks'))) {
     console.log('Creating table "tracks"')
-    getDatabase().schema.createTable('tracks', tableBuilder => {
+    await getDatabase().schema.createTable('tracks', tableBuilder => {
       tableBuilder.increments('id')
       tableBuilder.text('path').notNullable()
       tableBuilder.text('title').notNullable()
@@ -21,7 +21,7 @@ export async function createSchemas() {
 
   if (!(await tableExists('albums'))) {
     console.log('Creating table "albums"')
-    getDatabase().schema.createTable('albums', tableBuilder => {
+    await getDatabase().schema.createTable('albums', tableBuilder => {
       tableBuilder.increments('id')
       tableBuilder.text('title').notNullable()
       tableBuilder.text('cover')
@@ -30,7 +30,7 @@ export async function createSchemas() {
 
   if (!(await tableExists('album_tracks'))) {
     console.log('Creating table "album_tracks"')
-    return getDatabase().schema.createTable('album_tracks', tableBuilder => {
+    await getDatabase().schema.createTable('album_tracks', tableBuilder => {
       tableBuilder.integer('trackId').references('id').inTable('tracks')
       tableBuilder.integer('albumId').references('id').inTable('albums')
       tableBuilder.primary(['trackId', 'albumId'])
@@ -39,7 +39,7 @@ export async function createSchemas() {
 
   if (!(await tableExists('artists'))) {
     console.log('Creating table "artists"')
-    getDatabase().schema.createTable('artists', tableBuilder => {
+    await getDatabase().schema.createTable('artists', tableBuilder => {
       tableBuilder.increments('id')
       tableBuilder.text('name').notNullable()
     })
