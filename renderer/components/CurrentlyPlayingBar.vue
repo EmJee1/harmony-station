@@ -1,22 +1,29 @@
 <template>
   <div class="fixed bottom-0 left-0 w-screen bg-slate-100 p-4">
-    <div class="container flex items-center gap-4">
-      <ButtonIcon
-        @click="onMainActionClick(playingStatus)"
-        :disabled="
-          playingStatus === PlayingStatus.Stopped ||
-          playingStatus === PlayingStatus.PlayRequested
-        "
+    <div class="container grid grid-cols-8 items-center gap-8">
+      <div v-if="currentTrack" class="col-span-2 truncate">
+        {{ currentTrack.title }}
+      </div>
+
+      <div
+        class="col-span-4 flex items-center gap-4"
+        :class="{ 'col-span-6': !currentTrack }"
       >
-        <PlayIcon v-if="playingStatus === PlayingStatus.Paused" />
-        <PauseIcon v-else-if="playingStatus === PlayingStatus.Playing" />
-        <ArrowPathIcon
-          v-else-if="playingStatus === PlayingStatus.PlayRequested"
-          class="animate-spin"
-        />
-        <PlayIcon v-else />
-      </ButtonIcon>
-      <div class="w-full">
+        <ButtonIcon
+          @click="onMainActionClick(playingStatus)"
+          :disabled="
+            playingStatus === PlayingStatus.Stopped ||
+            playingStatus === PlayingStatus.PlayRequested
+          "
+        >
+          <PlayIcon v-if="playingStatus === PlayingStatus.Paused" />
+          <PauseIcon v-else-if="playingStatus === PlayingStatus.Playing" />
+          <ArrowPathIcon
+            v-else-if="playingStatus === PlayingStatus.PlayRequested"
+            class="animate-spin"
+          />
+          <PlayIcon v-else />
+        </ButtonIcon>
         <p v-if="playingStatus === PlayingStatus.Stopped">
           Nothing is playing right now
         </p>
@@ -25,11 +32,20 @@
         </p>
         <Seeker v-else class="w-full" />
       </div>
-      <ButtonIcon @click="toggleMute">
-        <SpeakerXMarkIcon v-if="volume === 0 || muted" />
-        <SpeakerWaveIcon v-else />
-      </ButtonIcon>
-      <input type="range" min="0" max="1" step="0.05" @input="onVolumeChange" />
+
+      <div class="col-span-2 flex items-center gap-4">
+        <ButtonIcon @click="toggleMute">
+          <SpeakerXMarkIcon v-if="volume === 0 || muted" />
+          <SpeakerWaveIcon v-else />
+        </ButtonIcon>
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.05"
+          @input="onVolumeChange"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -47,7 +63,8 @@ import Seeker from './Seeker.vue'
 
 const playingStore = usePlayingStore()
 
-const { audioElement, playingStatus, volume, muted } = storeToRefs(playingStore)
+const { audioElement, playingStatus, volume, muted, currentTrack } =
+  storeToRefs(playingStore)
 const { toggleMute } = playingStore
 
 function onMainActionClick(playingStatus: PlayingStatus) {
