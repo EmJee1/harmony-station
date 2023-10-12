@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { app, ipcMain, BrowserWindow } from 'electron'
 import { getSettings } from './repositories/settings'
-import { clearTracks, getTracks } from './repositories/tracks'
+import { addTracks, clearTracks, getTracks } from './repositories/tracks'
 import { scanMusicFilesInFolder } from './utils/files'
 import { getMetadataForMusicFiles } from './utils/metadata'
 import { createSchemas } from './schemas/create-schemas'
@@ -9,6 +9,7 @@ import {
   extractAlbumsFromTracks,
   extractAlbumTracks,
   extractArtistsFromTracks,
+  extractTracksFromTracks,
 } from './utils/tracks'
 import { addArtists } from './repositories/artists'
 import { addAlbums, getAlbums } from './repositories/albums'
@@ -71,6 +72,8 @@ app.whenReady().then(async () => {
     await addArtists(artistNames)
     const albumNames = extractAlbumsFromTracks(metadata)
     await addAlbums(albumNames)
+    const tracks = extractTracksFromTracks(files, metadata)
+    await addTracks(tracks)
 
     const dbAlbums = await getAlbums()
     const dbTracks = await getTracks()
