@@ -2,7 +2,7 @@ import type { IAudioMetadata } from 'music-metadata'
 
 const ARTIST_TAG_SEPARATOR = '; '
 
-function getArtistsFromString(str: string) {
+export function getArtistsFromString(str: string) {
   return str.split(ARTIST_TAG_SEPARATOR)
 }
 

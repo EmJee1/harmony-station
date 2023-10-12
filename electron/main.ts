@@ -12,21 +12,24 @@ import { scanMusicFilesInFolder } from './utils/files'
 import { getMetadataForMusicFiles } from './utils/metadata'
 import { createSchemas } from './schemas/create-schemas'
 import {
+  extractAlbumArtists,
   extractAlbumsFromTracks,
   extractAlbumTracks,
   extractArtistsFromTracks,
   extractTracksFromTracks,
 } from './utils/tracks'
-import { addArtists, clearArtists } from './repositories/artists'
+import { addArtists, clearArtists, getArtists } from './repositories/artists'
 import {
   addAlbums,
   clearAlbums,
   getAlbum,
+  getAlbumArtistsInAlbum,
   getAlbums,
   getTracksInAlbum,
 } from './repositories/albums'
 import { addAlbumTracks, clearAlbumTracks } from './repositories/albumTracks'
 import { harmonyProtocolHandler } from './protocols/harmony-protocol'
+import { addAlbumArtists, clearAlbumArtists } from './repositories/albumArtists'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -80,12 +83,14 @@ app.whenReady().then(async () => {
   ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => ({
     album: await getAlbum(id),
     tracks: await getTracksInAlbum(id),
+    albumArtists: await getAlbumArtistsInAlbum(id),
   }))
   ipcMain.handle('scan-tracks', async () => {
     const settings = await getSettings()
     await Promise.all([
-      clearAlbums(),
+      clearAlbumArtists(),
       clearAlbumTracks(),
+      clearAlbums(),
       clearArtists(),
       clearTracks(),
     ])
@@ -101,8 +106,13 @@ app.whenReady().then(async () => {
 
     const dbAlbums = await getAlbums()
     const dbTracks = await getTracks()
+    const dbArtists = await getArtists()
+
     const albumTracks = extractAlbumTracks(dbAlbums, dbTracks, metadata)
     await addAlbumTracks(albumTracks)
+
+    const albumArtists = extractAlbumArtists(dbAlbums, dbArtists, metadata)
+    await addAlbumArtists(albumArtists)
   })
 
   // TODO: update to protocol.handle because registerFileProtocol is deprecated

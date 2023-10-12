@@ -44,4 +44,13 @@ export async function createSchemas() {
       tableBuilder.text('name').notNullable()
     })
   }
+
+  if (!(await tableExists('album_artists'))) {
+    console.log('Creating table "album_artists"')
+    await getDatabase().schema.createTable('album_artists', tableBuilder => {
+      tableBuilder.integer('albumId').references('id').inTable('albums')
+      tableBuilder.integer('artistId').references('id').inTable('artists')
+      tableBuilder.primary(['albumId', 'artistId'])
+    })
+  }
 }

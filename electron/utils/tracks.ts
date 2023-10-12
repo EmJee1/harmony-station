@@ -1,9 +1,10 @@
 import type { IAudioMetadata } from 'music-metadata'
-import { getArtistsFromTags } from './artists'
+import { getArtistsFromString, getArtistsFromTags } from './artists'
 import type { Album, DbAlbum } from '../../types/albums'
 import type { DbTrack, Track } from '../../types/tracks'
-import type { Artist } from '../../types/artist'
-import { AlbumTracks } from '../../types/album-tracks'
+import type { Artist, DbArtist } from '../../types/artist'
+import type { AlbumTracks } from '../../types/album-tracks'
+import type { AlbumArtists } from '../../types/album-artists'
 
 export function extractAlbumsFromTracks(tracks: IAudioMetadata[]) {
   const albums = tracks.map(track => track.common.album).filter(Boolean)
@@ -52,4 +53,32 @@ export function extractAlbumTracks(
       }
     })
     .filter(Boolean)
+}
+
+export function extractAlbumArtists(
+  albums: DbAlbum[],
+  artists: DbArtist[],
+  meta: IAudioMetadata[]
+) {
+  return albums.flatMap(album => {
+    const artistIds = meta
+      .filter(metaItem => metaItem.common.album === album.title)
+      .flatMap(metaItem => getArtistsFromString(metaItem.common.albumartist))
+      .map(albumArtist => {
+        const artist = artists.find(artist => artist.name === albumArtist)
+        if (!artist) {
+          console.warn(`Artist not found for album ${album.id}`)
+          return
+        }
+
+        return artist.id
+      })
+      .filter(Boolean)
+
+    const artistIdsWithoutDuplicates = Array.from(new Set(artistIds))
+    return artistIdsWithoutDuplicates.map<AlbumArtists>(artistId => ({
+      albumId: album.id,
+      artistId,
+    }))
+  })
 }

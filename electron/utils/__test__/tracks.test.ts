@@ -1,6 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import type { IAudioMetadata } from 'music-metadata'
 import {
+  extractAlbumArtists,
   extractAlbumsFromTracks,
   extractAlbumTracks,
   extractArtistsFromTracks,
@@ -102,6 +103,31 @@ describe('tracks utils', () => {
       ]
 
       expect(extractAlbumTracks(albums, tracks, meta)).toEqual(expected)
+    })
+  })
+
+  describe('extractAlbumArtists', () => {
+    test('should return the correct album_artists', () => {
+      const albums: DbAlbum[] = [
+        { id: 10, title: 'a-1' },
+        { id: 20, title: 'a-2' },
+      ]
+      const artists = [
+        { id: 1, name: 'a-1' },
+        { id: 2, name: 'a-2' },
+      ]
+      const meta = [
+        { common: { album: 'a-1', albumartist: 'a-1' } },
+        { common: { album: 'a-1', albumartist: 'a-2' } },
+        { common: { album: 'a-2', albumartist: 'a-2' } },
+      ] as IAudioMetadata[]
+      const expected = [
+        { albumId: 10, artistId: 1 },
+        { albumId: 10, artistId: 2 },
+        { albumId: 20, artistId: 2 },
+      ]
+
+      expect(extractAlbumArtists(albums, artists, meta)).toEqual(expected)
     })
   })
 })
