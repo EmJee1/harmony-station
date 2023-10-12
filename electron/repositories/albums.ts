@@ -21,7 +21,11 @@ export async function getAlbumArtistsInAlbum(id: number): Promise<DbArtist[]> {
     .select('artists.*')
 }
 
-export async function getAlbums() {
+export async function getAlbums(limit?: number) {
+  if (limit) {
+    return getDatabase()('albums').limit(limit)
+  }
+
   return getDatabase()('albums')
 }
 

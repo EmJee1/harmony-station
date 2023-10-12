@@ -26,11 +26,10 @@ import type { DbAlbum } from '../../types/albums'
 const albums = ref<DbAlbum[]>([])
 
 onMounted(async () => {
-  albums.value = await window.electronAPI.getAlbums()
+  albums.value = await window.electronAPI.getAlbums(10)
 })
 
 async function onScan() {
   await window.electronAPI.scanTracks()
-  await tracksStore.fetchTracks()
 }
 </script>
