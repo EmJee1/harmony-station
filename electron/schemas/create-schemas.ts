@@ -28,12 +28,12 @@ export async function createSchemas() {
     })
   }
 
-  if (!(await tableExists('albums_tracks'))) {
-    console.log('Creating table "albums_tracks"')
-    getDatabase().schema.createTable('albums_tracks', tableBuilder => {
-      tableBuilder.integer('track_id').references('id').inTable('tracks')
-      tableBuilder.integer('album_id').references('id').inTable('albums')
-      tableBuilder.primary(['track_id', 'album_id'])
+  if (!(await tableExists('album_tracks'))) {
+    console.log('Creating table "album_tracks"')
+    return getDatabase().schema.createTable('album_tracks', tableBuilder => {
+      tableBuilder.integer('trackId').references('id').inTable('tracks')
+      tableBuilder.integer('albumId').references('id').inTable('albums')
+      tableBuilder.primary(['trackId', 'albumId'])
     })
   }
 

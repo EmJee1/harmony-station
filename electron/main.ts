@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { app, ipcMain, BrowserWindow } from 'electron'
 import { getSettings } from './repositories/settings'
-import { addTracks, clearTracks, getTracks } from './repositories/tracks'
+import { addTracks, getTracks, clearTracks } from './repositories/tracks'
 import { scanMusicFilesInFolder } from './utils/files'
 import { getMetadataForMusicFiles } from './utils/metadata'
 import { createSchemas } from './schemas/create-schemas'
@@ -11,9 +11,9 @@ import {
   extractArtistsFromTracks,
   extractTracksFromTracks,
 } from './utils/tracks'
-import { addArtists } from './repositories/artists'
-import { addAlbums, getAlbums } from './repositories/albums'
-import { addAlbumTracks } from './repositories/albumTracks'
+import { addArtists, clearArtists } from './repositories/artists'
+import { addAlbums, clearAlbums, getAlbums } from './repositories/albums'
+import { addAlbumTracks, clearAlbumTracks } from './repositories/albumTracks'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -65,7 +65,13 @@ app.whenReady().then(async () => {
   ipcMain.handle('get:tracks', getTracks)
   ipcMain.handle('scan-tracks', async () => {
     const settings = await getSettings()
-    await clearTracks()
+    await Promise.all([
+      clearAlbums(),
+      clearAlbumTracks(),
+      clearArtists(),
+      clearTracks(),
+    ])
+
     const files = await scanMusicFilesInFolder(settings.audioDirectories.at(0))
     const metadata = await getMetadataForMusicFiles(files)
     const artistNames = extractArtistsFromTracks(metadata)
