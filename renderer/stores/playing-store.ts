@@ -14,6 +14,8 @@ export const usePlayingStore = defineStore('playing', () => {
   const playingStatus = ref(PlayingStatus.Stopped)
   const duration = ref(0)
   const currentTime = ref(0)
+  const volume = ref(1)
+  const muted = ref(false)
   const audioElement = ref(new Audio())
 
   audioElement.value.onerror = err => {
@@ -41,6 +43,15 @@ export const usePlayingStore = defineStore('playing', () => {
     duration.value = audioElement.value.duration
   }
 
+  audioElement.value.onvolumechange = () => {
+    volume.value = audioElement.value.volume
+  }
+
+  function toggleMute() {
+    muted.value = !muted.value
+    audioElement.value.muted = muted.value
+  }
+
   watch(
     () => currentTrack.value,
     async track => {
@@ -61,5 +72,8 @@ export const usePlayingStore = defineStore('playing', () => {
     playingStatus,
     duration,
     currentTime,
+    volume,
+    muted,
+    toggleMute,
   }
 })
