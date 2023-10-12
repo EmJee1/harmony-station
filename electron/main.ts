@@ -1,5 +1,11 @@
 import path from 'node:path'
-import { app, ipcMain, BrowserWindow, type IpcMainInvokeEvent } from 'electron'
+import {
+  app,
+  ipcMain,
+  protocol,
+  BrowserWindow,
+  type IpcMainInvokeEvent,
+} from 'electron'
 import { getSettings } from './repositories/settings'
 import { addTracks, getTracks, clearTracks } from './repositories/tracks'
 import { scanMusicFilesInFolder } from './utils/files'
@@ -20,6 +26,7 @@ import {
   getTracksInAlbum,
 } from './repositories/albums'
 import { addAlbumTracks, clearAlbumTracks } from './repositories/albumTracks'
+import { harmonyProtocolHandler } from './protocols/harmony-protocol'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -97,6 +104,10 @@ app.whenReady().then(async () => {
     const albumTracks = extractAlbumTracks(dbAlbums, dbTracks, metadata)
     await addAlbumTracks(albumTracks)
   })
+
+  // TODO: update to protocol.handle because registerFileProtocol is deprecated
+  // https://www.electronjs.org/docs/latest/breaking-changes#planned-breaking-api-changes-250
+  protocol.registerFileProtocol('harmony', harmonyProtocolHandler)
 
   createWindow()
 })
