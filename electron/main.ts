@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { app, ipcMain, BrowserWindow } from 'electron'
+import { app, ipcMain, BrowserWindow, type IpcMainInvokeEvent } from 'electron'
 import { getSettings } from './repositories/settings'
 import { addTracks, getTracks, clearTracks } from './repositories/tracks'
 import { scanMusicFilesInFolder } from './utils/files'
@@ -12,7 +12,13 @@ import {
   extractTracksFromTracks,
 } from './utils/tracks'
 import { addArtists, clearArtists } from './repositories/artists'
-import { addAlbums, clearAlbums, getAlbums } from './repositories/albums'
+import {
+  addAlbums,
+  clearAlbums,
+  getAlbum,
+  getAlbums,
+  getTracksInAlbum,
+} from './repositories/albums'
 import { addAlbumTracks, clearAlbumTracks } from './repositories/albumTracks'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -63,6 +69,10 @@ app.whenReady().then(async () => {
 
   ipcMain.handle('get:settings', getSettings)
   ipcMain.handle('get:tracks', getTracks)
+  ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => ({
+    album: await getAlbum(id),
+    tracks: await getTracksInAlbum(id),
+  }))
   ipcMain.handle('scan-tracks', async () => {
     const settings = await getSettings()
     await Promise.all([

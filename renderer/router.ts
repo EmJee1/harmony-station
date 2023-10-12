@@ -8,5 +8,9 @@ export const router = createRouter({
       path: '/',
       component: Home,
     },
+    {
+      path: '/album/:id',
+      component: () => import('./views/Album.vue'),
+    },
   ],
 })

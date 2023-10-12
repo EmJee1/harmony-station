@@ -8,7 +8,7 @@
     <Card
       v-for="track in tracksStore.tracks"
       :title="track.title"
-      to="/"
+      to="/album/25"
       image="#"
       class="w-48 min-w-[12rem]"
     >
