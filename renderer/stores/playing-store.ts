@@ -40,7 +40,7 @@ export const usePlayingStore = defineStore('playing', () => {
         return
       }
 
-      audioElement.src = `harmony://${track.path}`
+      audioElement.src = encodeURI(`harmony://${track.path}`)
       await audioElement.play()
     }
   )
