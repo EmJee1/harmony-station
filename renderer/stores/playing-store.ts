@@ -14,44 +14,44 @@ export const usePlayingStore = defineStore('playing', () => {
   const playingStatus = ref(PlayingStatus.Stopped)
   const duration = ref(0)
   const currentTime = ref(0)
-  const audioElement = new Audio()
+  const audioElement = ref(new Audio())
 
-  audioElement.onerror = err => {
+  audioElement.value.onerror = err => {
     // TODO: show user-facing error message
     console.log('Error playing audio element')
   }
 
-  audioElement.ontimeupdate = () => {
-    currentTime.value = Math.round(audioElement.currentTime)
+  audioElement.value.ontimeupdate = () => {
+    currentTime.value = Math.round(audioElement.value.currentTime)
   }
 
-  audioElement.onplay = () => {
+  audioElement.value.onplay = () => {
     playingStatus.value = PlayingStatus.PlayRequested
   }
 
-  audioElement.onplaying = () => {
+  audioElement.value.onplaying = () => {
     playingStatus.value = PlayingStatus.Playing
   }
 
-  audioElement.onpause = () => {
+  audioElement.value.onpause = () => {
     playingStatus.value = PlayingStatus.Paused
   }
 
-  audioElement.ondurationchange = () => {
-    duration.value = audioElement.duration
+  audioElement.value.ondurationchange = () => {
+    duration.value = audioElement.value.duration
   }
 
   watch(
     () => currentTrack.value,
     async track => {
       if (!track) {
-        audioElement.pause()
-        audioElement.src = ''
+        audioElement.value.pause()
+        audioElement.value.src = ''
         return
       }
 
-      audioElement.src = encodeURI(`harmony://${track.path}`)
-      await audioElement.play()
+      audioElement.value.src = encodeURI(`harmony://${track.path}`)
+      await audioElement.value.play()
     }
   )
 
