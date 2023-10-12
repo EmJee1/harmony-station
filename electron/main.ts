@@ -82,11 +82,12 @@ app.whenReady().then(async () => {
   ipcMain.handle('get:albums', (_: IpcMainInvokeEvent, limit: number) => {
     return getAlbums(limit)
   })
-  ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => ({
-    album: await getAlbum(id),
-    tracks: await getTracksInAlbum(id),
-    albumArtists: await getAlbumArtistsInAlbum(id),
-  }))
+  ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => {
+    const album = await getAlbum(id)
+    album.tracks = await getTracksInAlbum(id)
+    album.albumArtists = await getAlbumArtistsInAlbum(id)
+    return album
+  })
   ipcMain.handle('scan-tracks', async () => {
     const settings = await getSettings()
     await Promise.all([

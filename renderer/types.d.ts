@@ -1,15 +1,12 @@
 import type { Settings } from '../types/settings'
 import type { DbTrack } from '../types/tracks'
 import type { DbAlbum } from '../types/albums'
-import type { DbArtist } from '../types/artist'
 
 export interface IElectronAPI {
   getSettings: () => Promise<Settings>
   getTracks: () => Promise<DbTrack[]>
   getAlbums: (limit: number) => Promise<DbAlbum[]>
-  getAlbum: (
-    id: number
-  ) => Promise<{ album: DbAlbum; tracks: DbTrack[]; albumArtists: DbArtist[] }>
+  getAlbum: (id: number) => Promise<Required<DbAlbum>>
   scanTracks: () => Promise<void>
 }
 

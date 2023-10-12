@@ -7,13 +7,17 @@
         <Typography is="h1" variant="heading-1" weight="bold">
           {{ album.title }}
         </Typography>
-        <Typography v-for="artist in albumArtists" :key="artist.id">
+        <Typography v-for="artist in album.albumArtists" :key="artist.id">
           {{ artist.name }}
         </Typography>
       </div>
     </div>
     <ul class="mt-8 space-y-4">
-      <li v-for="(track, index) in tracks" :key="track.id" class="flex gap-2">
+      <li
+        v-for="(track, index) in album.tracks"
+        :key="track.id"
+        class="flex gap-2"
+      >
         <ButtonIcon @click="onPlay(track)">
           <PlayIcon />
         </ButtonIcon>
@@ -38,15 +42,10 @@ import ButtonIcon from '../components/ButtonIcon.vue'
 const route = useRoute()
 const playingStore = usePlayingStore()
 
-const tracks = ref<DbTrack[]>([])
-const album = ref<DbAlbum>()
-const albumArtists = ref<DbArtist[]>([])
+const album = ref<Required<DbAlbum>>()
 
 onMounted(async () => {
-  const result = await window.electronAPI.getAlbum(Number(route.params.id))
-  tracks.value = result.tracks
-  album.value = result.album
-  albumArtists.value = result.albumArtists
+  album.value = await window.electronAPI.getAlbum(Number(route.params.id))
 })
 
 function onPlay(track: DbTrack) {
