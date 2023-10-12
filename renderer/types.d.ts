@@ -9,7 +9,7 @@ export interface IElectronAPI {
   getAlbums: () => Promise<DbAlbum[]>
   getAlbum: (
     id: number
-  ) => Promise<{ album: DbAlbum; tracks: DbTrack[]; artist: DbArtist }>
+  ) => Promise<{ album: DbAlbum; tracks: DbTrack[]; albumArtists: DbArtist[] }>
   scanTracks: () => Promise<void>
 }
 
