@@ -12,11 +12,17 @@ export enum PlayingStatus {
 export const usePlayingStore = defineStore('playing', () => {
   const currentTrack = ref<DbTrack>()
   const playingStatus = ref(PlayingStatus.Stopped)
+  const duration = ref(0)
+  const currentTime = ref(0)
   const audioElement = new Audio()
 
   audioElement.onerror = err => {
     // TODO: show user-facing error message
     console.log('Error playing audio element')
+  }
+
+  audioElement.ontimeupdate = () => {
+    currentTime.value = Math.round(audioElement.currentTime)
   }
 
   audioElement.onplay = () => {
@@ -29,6 +35,10 @@ export const usePlayingStore = defineStore('playing', () => {
 
   audioElement.onpause = () => {
     playingStatus.value = PlayingStatus.Paused
+  }
+
+  audioElement.ondurationchange = () => {
+    duration.value = audioElement.duration
   }
 
   watch(
@@ -49,5 +59,7 @@ export const usePlayingStore = defineStore('playing', () => {
     audioElement,
     currentTrack,
     playingStatus,
+    duration,
+    currentTime,
   }
 })

@@ -20,9 +20,17 @@
       <p v-if="playingStore.playingStatus === PlayingStatus.Stopped">
         Nothing is playing right now
       </p>
-      <p v-if="playingStore.playingStatus === PlayingStatus.PlayRequested">
+      <p v-else-if="playingStore.playingStatus === PlayingStatus.PlayRequested">
         Loading...
       </p>
+      <input
+        v-else
+        type="range"
+        class=""
+        min="0"
+        :max="playingStore.duration"
+        :value="playingStore.currentTime"
+      />
     </div>
   </div>
 </template>
