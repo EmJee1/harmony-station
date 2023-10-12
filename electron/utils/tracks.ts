@@ -5,6 +5,7 @@ import type { DbTrack, Track } from '../../types/tracks'
 import type { Artist, DbArtist } from '../../types/artist'
 import type { AlbumTracks } from '../../types/album-tracks'
 import type { AlbumArtists } from '../../types/album-artists'
+import { TrackArtists } from '../../types/track-artists'
 
 export function extractAlbumsFromTracks(tracks: IAudioMetadata[]) {
   const albums = tracks.map(track => track.common.album).filter(Boolean)
@@ -79,6 +80,33 @@ export function extractAlbumArtists(
     return artistIdsWithoutDuplicates.map<AlbumArtists>(artistId => ({
       albumId: album.id,
       artistId,
+    }))
+  })
+}
+
+export function extractTrackArtists(
+  tracks: DbTrack[],
+  artists: DbArtist[],
+  meta: IAudioMetadata[]
+) {
+  return tracks.flatMap((track, index) => {
+    const artistsInTracks = getArtistsFromTags(meta[index])
+    const artistIds = artistsInTracks
+      .map(artistInTrack => {
+        const art = artists.find(artist => artist.name === artistInTrack)
+        if (!art) {
+          console.warn(`Artist not found for track ${track.id}`)
+          return
+        }
+
+        return art.id
+      })
+      .filter(Boolean)
+
+    const artistIdsWithoutDuplicates = Array.from(new Set(artistIds))
+    return artistIdsWithoutDuplicates.map<TrackArtists>(artistId => ({
+      artistId,
+      trackId: track.id,
     }))
   })
 }

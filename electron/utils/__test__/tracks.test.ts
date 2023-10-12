@@ -5,6 +5,7 @@ import {
   extractAlbumsFromTracks,
   extractAlbumTracks,
   extractArtistsFromTracks,
+  extractTrackArtists,
   extractTracksFromTracks,
 } from '../tracks'
 import type { DbAlbum } from '../../../types/albums'
@@ -128,6 +129,33 @@ describe('tracks utils', () => {
       ]
 
       expect(extractAlbumArtists(albums, artists, meta)).toEqual(expected)
+    })
+  })
+
+  describe('extractTrackArtists', () => {
+    test('should return the correct track_artists', () => {
+      const tracks: DbTrack[] = [
+        { id: 1, title: '', path: '' },
+        { id: 2, title: '', path: '' },
+        { id: 3, title: '', path: '' },
+      ]
+      const artists = [
+        { id: 1, name: 'a-1' },
+        { id: 2, name: 'a-2' },
+      ]
+      const meta = [
+        { common: { artist: 'a-1' } },
+        { common: { artist: 'a-1; a-2' } },
+        { common: { artist: 'a-2' } },
+      ] as IAudioMetadata[]
+      const expected = [
+        { trackId: 1, artistId: 1 },
+        { trackId: 2, artistId: 1 },
+        { trackId: 2, artistId: 2 },
+        { trackId: 3, artistId: 2 },
+      ]
+
+      expect(extractTrackArtists(tracks, artists, meta)).toEqual(expected)
     })
   })
 })

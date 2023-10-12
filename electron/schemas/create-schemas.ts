@@ -53,4 +53,13 @@ export async function createSchemas() {
       tableBuilder.primary(['albumId', 'artistId'])
     })
   }
+
+  if (!(await tableExists('track_artists'))) {
+    console.log('Creating table "track_artists"')
+    await getDatabase().schema.createTable('track_artists', tableBuilder => {
+      tableBuilder.integer('trackId').references('id').inTable('tracks')
+      tableBuilder.integer('artistId').references('id').inTable('artists')
+      tableBuilder.primary(['trackId', 'artistId'])
+    })
+  }
 }

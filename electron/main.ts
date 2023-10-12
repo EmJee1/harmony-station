@@ -16,6 +16,7 @@ import {
   extractAlbumsFromTracks,
   extractAlbumTracks,
   extractArtistsFromTracks,
+  extractTrackArtists,
   extractTracksFromTracks,
 } from './utils/tracks'
 import { addArtists, clearArtists, getArtists } from './repositories/artists'
@@ -30,6 +31,7 @@ import {
 import { addAlbumTracks, clearAlbumTracks } from './repositories/albumTracks'
 import { harmonyProtocolHandler } from './protocols/harmony-protocol'
 import { addAlbumArtists, clearAlbumArtists } from './repositories/albumArtists'
+import { addTrackArtists } from './repositories/trackArtists'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -116,6 +118,9 @@ app.whenReady().then(async () => {
 
     const albumArtists = extractAlbumArtists(dbAlbums, dbArtists, metadata)
     await addAlbumArtists(albumArtists)
+
+    const trackArtists = extractTrackArtists(dbTracks, dbArtists, metadata)
+    await addTrackArtists(trackArtists)
   })
 
   // TODO: update to protocol.handle because registerFileProtocol is deprecated
