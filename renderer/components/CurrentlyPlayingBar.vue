@@ -1,8 +1,6 @@
 <template>
-  <div
-    class="fixed bottom-0 left-0 flex w-screen items-center gap-4 bg-slate-100 bg-white p-4"
-  >
-    <div class="container">
+  <div class="fixed bottom-0 left-0 w-screen bg-slate-100 p-4">
+    <div class="container flex items-center gap-4">
       <ButtonIcon
         @click="onMainActionClick(playingStore.playingStatus)"
         :disabled="
