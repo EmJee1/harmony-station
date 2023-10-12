@@ -12,6 +12,7 @@
         <PauseIcon v-else-if="playingStatus === PlayingStatus.Playing" />
         <ArrowPathIcon
           v-else-if="playingStatus === PlayingStatus.PlayRequested"
+          class="animate-spin"
         />
         <PlayIcon v-else />
       </ButtonIcon>
