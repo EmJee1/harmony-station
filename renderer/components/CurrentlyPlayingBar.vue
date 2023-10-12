@@ -30,6 +30,8 @@
         min="0"
         :max="playingStore.duration"
         :value="playingStore.currentTime"
+        @mousedown="onSeekStart"
+        @mouseup="onSeekEnd"
       />
     </div>
   </div>
@@ -53,5 +55,15 @@ function onMainActionClick(playingStatus: PlayingStatus) {
       playingStore.audioElement.play()
       break
   }
+}
+
+function onSeekStart() {
+  playingStore.audioElement.pause()
+}
+
+function onSeekEnd(e: Event) {
+  const seekValue = (e.target as HTMLInputElement).valueAsNumber
+  playingStore.audioElement.currentTime = seekValue
+  playingStore.audioElement.play()
 }
 </script>
