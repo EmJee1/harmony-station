@@ -33,6 +33,7 @@ export async function createSchemas() {
     getDatabase().schema.createTable('albums_tracks', tableBuilder => {
       tableBuilder.integer('track_id').references('id').inTable('tracks')
       tableBuilder.integer('album_id').references('id').inTable('albums')
+      tableBuilder.primary(['track_id', 'album_id'])
     })
   }
 

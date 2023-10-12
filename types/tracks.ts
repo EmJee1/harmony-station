@@ -6,5 +6,5 @@ export interface Track {
 }
 
 export interface DbTrack extends Track {
-  id: string
+  id: number
 }

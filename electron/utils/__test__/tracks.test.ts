@@ -1,10 +1,14 @@
 import { describe, expect, test } from '@jest/globals'
+import type { IAudioMetadata } from 'music-metadata'
 import {
   extractAlbumsFromTracks,
+  extractAlbumTracks,
   extractArtistsFromTracks,
   extractTracksFromTracks,
 } from '../tracks'
-import { IAudioMetadata } from 'music-metadata'
+import type { DbAlbum } from '../../../types/albums'
+import type { AlbumTracks } from '../../../types/album-tracks'
+import type { DbTrack } from '../../../types/tracks'
 
 describe('tracks utils', () => {
   describe('extractArtistsFromTracks', () => {
@@ -73,5 +77,31 @@ describe('tracks utils', () => {
         ).toEqual(expected)
       }
     )
+  })
+
+  describe('extractAlbumsTracks', () => {
+    test('should return the correct album_tracks', () => {
+      const albums: DbAlbum[] = [
+        { id: 10, title: 'a-1' },
+        { id: 20, title: 'a-2' },
+      ]
+      const tracks: DbTrack[] = [
+        { id: 1, title: '', path: '' },
+        { id: 2, title: '', path: '' },
+        { id: 3, title: '', path: '' },
+      ]
+      const meta = [
+        { common: { album: 'a-1' } },
+        { common: { album: 'a-1' } },
+        { common: { album: 'a-2' } },
+      ] as IAudioMetadata[]
+      const expected: AlbumTracks[] = [
+        { albumId: 10, trackId: 1 },
+        { albumId: 10, trackId: 2 },
+        { albumId: 20, trackId: 3 },
+      ]
+
+      expect(extractAlbumTracks(albums, tracks, meta)).toEqual(expected)
+    })
   })
 })

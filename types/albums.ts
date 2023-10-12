@@ -3,5 +3,5 @@ export interface Album {
 }
 
 export interface DbAlbum extends Album {
-  id: string
+  id: number
 }
