@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <RouterLink to="/">Home</RouterLink>
     <RouterView />
   </div>
 </template>
@@ -7,12 +8,10 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue'
 import { useSettingsStore } from './stores/settings-store'
-import { useTracksStore } from './stores/tracks-store'
 
 const { fetchSettings } = useSettingsStore()
-const { fetchTracks } = useTracksStore()
 
 onMounted(async () => {
-  await Promise.all([fetchSettings(), fetchTracks()])
+  await Promise.all([fetchSettings()])
 })
 </script>

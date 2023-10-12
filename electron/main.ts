@@ -69,6 +69,7 @@ app.whenReady().then(async () => {
 
   ipcMain.handle('get:settings', getSettings)
   ipcMain.handle('get:tracks', getTracks)
+  ipcMain.handle('get:albums', getAlbums)
   ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => ({
     album: await getAlbum(id),
     tracks: await getTracksInAlbum(id),

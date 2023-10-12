@@ -6,23 +6,28 @@
   <h3>Tracks</h3>
   <Carousel>
     <Card
-      v-for="track in tracksStore.tracks"
-      :title="track.title"
-      to="/album/25"
+      v-for="album in albums"
+      :title="album.title"
+      :to="`/album/${album.id}`"
       image="#"
       class="w-48 min-w-[12rem]"
     >
-      {{ track.title }}
+      {{ album.title }}
     </Card>
   </Carousel>
 </template>
 
 <script lang="ts" setup>
-import { useTracksStore } from '../stores/tracks-store'
+import { onMounted, ref } from 'vue'
 import Carousel from '../components/Carousel.vue'
 import Card from '../components/Card.vue'
+import type { DbAlbum } from '../../types/albums'
 
-const tracksStore = useTracksStore()
+const albums = ref<DbAlbum[]>([])
+
+onMounted(async () => {
+  albums.value = await window.electronAPI.getAlbums()
+})
 
 async function onScan() {
   await window.electronAPI.scanTracks()
