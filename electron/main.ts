@@ -20,7 +20,13 @@ import {
   extractTrackArtists,
   extractTracksFromTracks,
 } from './utils/tracks'
-import { addArtists, clearArtists, getArtists } from './repositories/artists'
+import {
+  addArtists,
+  clearArtists,
+  getArtist,
+  getArtists,
+  getTracksByArtist,
+} from './repositories/artists'
 import {
   addAlbums,
   clearAlbums,
@@ -98,6 +104,11 @@ app.whenReady().then(async () => {
     album.tracks = await getTracksInAlbum(id)
     album.albumArtists = await getAlbumArtistsInAlbum(id)
     return album
+  })
+  ipcMain.handle('get:artist', async (_: IpcMainInvokeEvent, id: number) => {
+    const artist = await getArtist(id)
+    artist.tracks = await getTracksByArtist(id)
+    return artist
   })
   ipcMain.handle('scan-tracks', async () => {
     const settings = await getSettings()

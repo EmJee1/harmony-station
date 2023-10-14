@@ -1,5 +1,17 @@
 import { getDatabase } from './database'
 import type { Artist } from '../../types/artist'
+import type { DbTrack } from '../../types/tracks'
+
+export async function getArtist(id: number) {
+  return getDatabase()('artists').where({ id }).first()
+}
+
+export async function getTracksByArtist(id: number): Promise<DbTrack[]> {
+  return getDatabase()('track_artists')
+    .where({ artistId: id })
+    .join('tracks', 'track_artists.trackId', 'tracks.id')
+    .select('tracks.*')
+}
 
 export async function getArtists() {
   return getDatabase()('artists')

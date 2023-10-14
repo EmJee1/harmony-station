@@ -13,6 +13,10 @@ export const router = createRouter({
       component: () => import('./views/Album.vue'),
     },
     {
+      path: '/artist/:id',
+      component: () => import('./views/Artist.vue'),
+    },
+    {
       path: '/settings',
       component: () => import('./views/Settings.vue'),
     },

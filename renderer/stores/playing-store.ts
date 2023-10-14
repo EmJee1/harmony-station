@@ -47,6 +47,11 @@ export const usePlayingStore = defineStore('playing', () => {
     volume.value = audioElement.value.volume
   }
 
+  audioElement.value.onended = () => {
+    playingStatus.value = PlayingStatus.Stopped
+    currentTrack.value = null
+  }
+
   function toggleMute() {
     muted.value = !muted.value
     audioElement.value.muted = muted.value
@@ -57,7 +62,6 @@ export const usePlayingStore = defineStore('playing', () => {
     async track => {
       if (!track) {
         audioElement.value.pause()
-        audioElement.value.src = ''
         return
       }
 

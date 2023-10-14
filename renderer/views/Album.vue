@@ -22,9 +22,7 @@
         :key="track.id"
         class="flex gap-2"
       >
-        <ButtonIcon @click="onPlay(track)">
-          <PlayIcon />
-        </ButtonIcon>
+        <PlayTrackButton :track="track" />
         <span>#{{ index + 1 }}</span>
         <span>{{ track.title }}</span>
       </li>
@@ -33,17 +31,13 @@
 </template>
 
 <script setup lang="ts">
-import PlayIcon from '@heroicons/vue/24/outline/PlayIcon'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import type { DbTrack } from '../../types/tracks'
-import type { DbAlbum } from '../../types/albums'
-import { usePlayingStore } from '../stores/playing-store'
+import PlayTrackButton from '../components/PlayTrackButton.vue'
 import Typography from '../components/Typography.vue'
-import ButtonIcon from '../components/ButtonIcon.vue'
+import type { DbAlbum } from '../../types/albums'
 
 const route = useRoute()
-const playingStore = usePlayingStore()
 
 const album = ref<Required<DbAlbum>>()
 
@@ -54,8 +48,4 @@ watch(
   },
   { immediate: true }
 )
-
-function onPlay(track: DbTrack) {
-  playingStore.currentTrack = track
-}
 </script>
