@@ -8,6 +8,9 @@
         v-debounce:500ms="onDebouncedSearch"
         type="text"
         class="w-full rounded border-2 border-slate-400 bg-slate-100 px-2 py-1"
+        :class="{
+          'rounded-b-none': searchResultsActive,
+        }"
       />
       <div
         class="pointer-events-none absolute right-2 top-1/2 h-5 w-5 -translate-y-1/2"
@@ -16,7 +19,7 @@
         <Spinner v-else />
       </div>
       <SearchResults
-        v-if="query && focussed"
+        v-if="searchResultsActive"
         :search-result="searchResult"
         @result-click="onResultClick"
       />
@@ -26,15 +29,17 @@
 
 <script lang="ts" setup>
 import MagnifyingGlassIcon from '@heroicons/vue/24/outline/MagnifyingGlassIcon'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import SearchResults from './SearchResults.vue'
 import Spinner from './Spinner.vue'
 import type { DbAlbum } from '../../types/albums'
-import SearchResults from './SearchResults.vue'
 
 const query = ref('')
 const focussed = ref(false)
 const loading = ref(false)
 const searchResult = ref<{ albums: DbAlbum[] }>({ albums: [] })
+
+const searchResultsActive = computed(() => query.value && focussed.value)
 
 function onSearchInput() {
   loading.value = true

@@ -1,14 +1,14 @@
 <template>
-  <div class="absolute left-0 bg-slate-100 p-3">
+  <div class="absolute left-0 w-full rounded-b bg-slate-100 p-3 shadow">
     <template v-if="searchResult.albums.length">
       <Typography is="p" variant="body" weight="bold">
         Albums ({{ searchResult.albums.length }})
       </Typography>
-      <ul>
-        <li v-for="album in searchResult.albums" :key="album.id">
+      <div class="mt-4 flex flex-col gap-2">
+        <div v-for="album in searchResult.albums" :key="album.id">
           <RouterLink
             :to="`/album/${album.id}`"
-            class="flex items-center gap-2"
+            class="flex items-center gap-4"
             @click="emit('result-click')"
           >
             <img :src="album.cover" alt="" class="h-12 w-12" />
@@ -16,8 +16,8 @@
               {{ album.title }}
             </Typography>
           </RouterLink>
-        </li>
-      </ul>
+        </div>
+      </div>
     </template>
   </div>
 </template>
