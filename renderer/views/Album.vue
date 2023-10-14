@@ -11,9 +11,15 @@
         <Typography is="h1" variant="heading-1" weight="bold">
           {{ album.title }}
         </Typography>
-        <Typography v-for="artist in album.albumArtists" :key="artist.id">
-          {{ artist.name }}
-        </Typography>
+        <RouterLink
+          v-for="(artist, index) in album.albumArtists"
+          :key="artist.id"
+          :to="`/artist/${artist.id}`"
+          class="hover:underline"
+        >
+          {{ artist.name
+          }}<span v-if="index + 1 !== album.albumArtists.length">, </span>
+        </RouterLink>
       </div>
     </div>
     <ul class="mt-6 space-y-4">
