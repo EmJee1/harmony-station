@@ -1,6 +1,6 @@
 <template>
   <div class="absolute left-0 w-full rounded-b bg-slate-100 p-3 shadow">
-    <template v-if="searchResult.albums.length">
+    <template v-if="hasResults">
       <Typography is="p" variant="body" weight="bold">
         Albums ({{ searchResult.albums.length }})
       </Typography>
@@ -19,18 +19,37 @@
         </div>
       </div>
     </template>
+    <template v-else-if="!loading">
+      <Typography is="p" variant="heading-3" weight="bold">
+        \ (0_0) /
+      </Typography>
+      <Typography is="p" variant="body" weight="light" class="mt-1">
+        No results found for that query
+      </Typography>
+    </template>
+    <template v-else>
+      <Typography is="p" variant="body" weight="light">
+        Hang tight while we search...
+      </Typography>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import Typography from './Typography.vue'
 import type { DbAlbum } from '../../types/albums'
 
-defineProps<{
+const props = defineProps<{
   searchResult: { albums: DbAlbum[] }
+  loading: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'result-click'): void
 }>()
+
+const hasResults = computed(() => {
+  return props.searchResult.albums.length
+})
 </script>
