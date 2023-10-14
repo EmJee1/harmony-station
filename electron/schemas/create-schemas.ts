@@ -62,4 +62,12 @@ export async function createSchemas() {
       tableBuilder.primary(['trackId', 'artistId'])
     })
   }
+
+  if (!(await tableExists('settings'))) {
+    console.log('Creating table "settings"')
+    await getDatabase().schema.createTable('settings', tableBuilder => {
+      tableBuilder.increments('id')
+      tableBuilder.text('audioDirectories').notNullable()
+    })
+  }
 }
