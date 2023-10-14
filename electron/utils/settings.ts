@@ -5,6 +5,6 @@ export function mapSettingsTableToDbSettings(
 ): DbSettings {
   return {
     ...settings,
-    audioDirectories: settings.audioDirectories.split(';'),
+    audioDirectories: settings.audioDirectories.split(';').filter(Boolean),
   }
 }

@@ -1,8 +1,5 @@
 <template>
   <Typography is="h1" variant="heading-1">Home</Typography>
-  <button class="border border-amber-800 px-2 py-1" @click="onScan">
-    Scan files
-  </button>
   <h3>Tracks</h3>
   <Carousel>
     <Card
@@ -29,8 +26,4 @@ const albums = ref<DbAlbum[]>([])
 onMounted(async () => {
   albums.value = await window.electronAPI.getAlbums(10)
 })
-
-async function onScan() {
-  await window.electronAPI.scanTracks()
-}
 </script>
