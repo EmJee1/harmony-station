@@ -12,7 +12,7 @@
             @click="emit('result-click')"
           >
             <img :src="album.cover" alt="" class="h-12 w-12" />
-            <Typography is="p" variant="body">
+            <Typography is="p" variant="body" class="truncate">
               {{ album.title }}
             </Typography>
           </RouterLink>

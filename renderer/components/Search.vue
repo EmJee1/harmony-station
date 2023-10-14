@@ -1,29 +1,27 @@
 <template>
-  <div v-click-outside="onClickOutside">
-    <div class="relative w-48">
-      <input
-        v-model="query"
-        @input="onSearchInput"
-        @click="onSearchClick"
-        v-debounce:500ms="onDebouncedSearch"
-        type="text"
-        class="w-full rounded border-2 border-slate-400 bg-slate-100 px-2 py-1"
-        :class="{
-          'rounded-b-none': searchResultsActive,
-        }"
-      />
-      <div
-        class="pointer-events-none absolute right-2 top-1/2 h-5 w-5 -translate-y-1/2"
-      >
-        <MagnifyingGlassIcon v-if="!loading" />
-        <Spinner v-else />
-      </div>
-      <SearchResults
-        v-if="searchResultsActive"
-        :search-result="searchResult"
-        @result-click="onResultClick"
-      />
+  <div class="relative" v-click-outside="onClickOutside">
+    <input
+      v-model="query"
+      @input="onSearchInput"
+      @click="onSearchClick"
+      v-debounce:500ms="onDebouncedSearch"
+      type="text"
+      class="w-full rounded border-2 border-slate-400 bg-slate-100 px-2 py-1"
+      :class="{
+        'rounded-b-none': searchResultsActive,
+      }"
+    />
+    <div
+      class="pointer-events-none absolute right-2 top-1/2 h-5 w-5 -translate-y-1/2"
+    >
+      <MagnifyingGlassIcon v-if="!loading" />
+      <Spinner v-else />
     </div>
+    <SearchResults
+      v-if="searchResultsActive"
+      :search-result="searchResult"
+      @result-click="onResultClick"
+    />
   </div>
 </template>
 

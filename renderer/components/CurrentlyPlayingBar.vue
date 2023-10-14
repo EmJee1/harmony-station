@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed bottom-0 left-0 w-screen bg-slate-100 p-4">
+  <div class="fixed bottom-0 left-0 w-screen bg-slate-100 py-4">
     <div class="container grid grid-cols-8 items-center gap-8">
       <div v-if="currentTrack" class="col-span-2 truncate">
         {{ currentTrack.title }}
