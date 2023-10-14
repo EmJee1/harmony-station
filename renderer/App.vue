@@ -10,7 +10,7 @@
       </ButtonIcon>
     </Container>
   </div>
-  <Container class="mt-4">
+  <Container class="mt-8">
     <RouterView />
     <CurrentlyPlayingBar />
   </Container>

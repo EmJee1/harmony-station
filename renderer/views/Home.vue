@@ -1,17 +1,16 @@
 <template>
-  <Typography is="h1" variant="heading-1">Home</Typography>
-  <h3>Tracks</h3>
-  <Carousel>
+  <Typography is="h1" variant="heading-2">Your albums</Typography>
+  <div class="mt-4 grid grid-cols-5 gap-6 lg:grid-cols-6">
     <Card
       v-for="album in albums"
       :title="album.title"
       :to="`/album/${album.id}`"
       :image="album.cover"
-      class="w-48 min-w-[12rem]"
+      class="col-span-1"
     >
       {{ album.title }}
     </Card>
-  </Carousel>
+  </div>
 </template>
 
 <script lang="ts" setup>

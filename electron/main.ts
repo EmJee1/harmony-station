@@ -43,6 +43,7 @@ if (require('electron-squirrel-startup')) {
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
+    minWidth: 768, // TailwindCSS md breakpoint
     width: 800,
     height: 600,
     webPreferences: {
@@ -89,7 +90,6 @@ app.whenReady().then(async () => {
       return updateSettings(update)
     }
   )
-  ipcMain.handle('get:tracks', getTracks)
   ipcMain.handle('get:albums', (_: IpcMainInvokeEvent, limit: number) => {
     return getAlbums(limit)
   })

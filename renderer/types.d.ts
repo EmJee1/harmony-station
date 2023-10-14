@@ -5,7 +5,6 @@ import type { DbAlbum } from '../types/albums'
 export interface IElectronAPI {
   getSettings: () => Promise<DbSettings>
   updateSettings: (update: Partial<DbSettings>) => Promise<void>
-  getTracks: () => Promise<DbTrack[]>
   getAlbums: (limit: number) => Promise<DbAlbum[]>
   getAlbum: (id: number) => Promise<Required<DbAlbum>>
   scanTracks: () => Promise<void>

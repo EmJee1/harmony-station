@@ -16,7 +16,7 @@
         </Typography>
       </div>
     </div>
-    <ul class="mt-8 space-y-4">
+    <ul class="mt-6 space-y-4">
       <li
         v-for="(track, index) in album.tracks"
         :key="track.id"

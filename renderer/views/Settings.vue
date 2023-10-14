@@ -1,13 +1,24 @@
 <template>
   <Typography is="h1" variant="heading-1">Settings</Typography>
   <SettingsSection title="Your local library">
-    <template v-if="settings.audioDirectories.length">
-      <div v-for="audioDir in settings.audioDirectories" :key="audioDir">
+    <div v-if="settings.audioDirectories.length" class="space-y-2">
+      <div
+        v-for="audioDir in settings.audioDirectories"
+        :key="audioDir"
+        class="group flex justify-between rounded p-2 hover:bg-slate-100"
+      >
         <Typography is="p" variant="body">
           {{ audioDir }}
         </Typography>
+        <ButtonIcon
+          class="hidden group-hover:block"
+          aria-label="remove directory"
+          @click="onRemoveDirectory(audioDir)"
+        >
+          <TrashIcon />
+        </ButtonIcon>
       </div>
-    </template>
+    </div>
     <template v-else>
       <Typography is="p" variant="body">
         You have not added any directories yet.
@@ -21,9 +32,10 @@
 </template>
 
 <script setup lang="ts">
+import TrashIcon from '@heroicons/vue/24/outline/TrashIcon'
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
 import Button from '../components/Button.vue'
+import ButtonIcon from '../components/ButtonIcon.vue'
 import Typography from '../components/Typography.vue'
 import { useSettingsStore } from '../stores/settings-store'
 import SettingsSection from '../components/SettingsSection.vue'
@@ -50,5 +62,13 @@ async function onAddDirectory() {
       ],
     })
   }
+}
+
+async function onRemoveDirectory(directory: string) {
+  await settingsStore.updateSettings({
+    audioDirectories: settings.value.audioDirectories.filter(
+      dir => dir !== directory
+    ),
+  })
 }
 </script>
