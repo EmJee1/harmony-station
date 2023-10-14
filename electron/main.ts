@@ -9,7 +9,7 @@ import {
 } from 'electron'
 import { getSettings, updateSettings } from './repositories/settings'
 import { addTracks, getTracks, clearTracks } from './repositories/tracks'
-import { scanMusicFilesInFolder } from './utils/files'
+import { scanMusicFilesInFolders } from './utils/files'
 import { getMetadataForMusicFiles } from './utils/metadata'
 import { createSchemas } from './schemas/create-schemas'
 import {
@@ -110,7 +110,7 @@ app.whenReady().then(async () => {
       clearTrackArtists(),
     ])
 
-    const files = await scanMusicFilesInFolder(settings.audioDirectories.at(0))
+    const files = await scanMusicFilesInFolders(settings.audioDirectories)
     const metadata = await getMetadataForMusicFiles(files)
     const artistNames = extractArtistsFromTracks(metadata)
     await addArtists(artistNames)

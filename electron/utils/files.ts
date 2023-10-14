@@ -16,3 +16,13 @@ export async function scanMusicFilesInFolder(directory: string) {
 
   return files
 }
+
+export async function scanMusicFilesInFolders(directories: string[]) {
+  const files = []
+  for (const directory of directories) {
+    const filesInDirectory = await scanMusicFilesInFolder(directory)
+    files.push(...filesInDirectory)
+  }
+
+  return files
+}
