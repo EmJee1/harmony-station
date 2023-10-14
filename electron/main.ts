@@ -4,9 +4,10 @@ import {
   ipcMain,
   protocol,
   BrowserWindow,
+  dialog,
   type IpcMainInvokeEvent,
 } from 'electron'
-import { getSettings } from './repositories/settings'
+import { getSettings, updateSettings } from './repositories/settings'
 import { addTracks, getTracks, clearTracks } from './repositories/tracks'
 import { scanMusicFilesInFolder } from './utils/files'
 import { getMetadataForMusicFiles } from './utils/metadata'
@@ -33,6 +34,7 @@ import { addAlbumTracks, clearAlbumTracks } from './repositories/albumTracks'
 import { harmonyProtocolHandler } from './protocols/harmony-protocol'
 import { addAlbumArtists, clearAlbumArtists } from './repositories/albumArtists'
 import { addTrackArtists } from './repositories/trackArtists'
+import { DbSettings } from '../types/settings'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -81,6 +83,12 @@ app.whenReady().then(async () => {
   await createSchemas()
 
   ipcMain.handle('get:settings', getSettings)
+  ipcMain.handle(
+    'update:settings',
+    (_: IpcMainInvokeEvent, update: Partial<DbSettings>) => {
+      return updateSettings(update)
+    }
+  )
   ipcMain.handle('get:tracks', getTracks)
   ipcMain.handle('get:albums', (_: IpcMainInvokeEvent, limit: number) => {
     return getAlbums(limit)
@@ -127,6 +135,11 @@ app.whenReady().then(async () => {
     return {
       albums: await searchAlbums(query, 6),
     }
+  })
+  ipcMain.handle('select-directory', async () => {
+    return dialog.showOpenDialog({
+      properties: ['openDirectory'],
+    })
   })
 
   // TODO: update to protocol.handle because registerFileProtocol is deprecated

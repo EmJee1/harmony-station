@@ -1,6 +1,9 @@
-import type { Settings, SettingsTable } from '../../types/settings'
 import { getDatabase } from './database'
-import { mapSettingsTableToDbSettings } from '../utils/settings'
+import type { DbSettings, Settings, SettingsTable } from '../../types/settings'
+import {
+  mapDbSettingsPartialToSettingsTable,
+  mapSettingsTableToDbSettings,
+} from '../utils/settings'
 
 const defaultSettings: SettingsTable = {
   id: 1,
@@ -19,5 +22,12 @@ export async function getSettings(): Promise<Settings> {
 }
 
 export async function setDefaultSettings() {
-  await getDatabase()('settings').insert({ id: 1, audioDirectories: '' })
+  await getDatabase()('settings').insert(defaultSettings)
+}
+
+export async function updateSettings(update: Partial<DbSettings>) {
+  const settingsTable = mapDbSettingsPartialToSettingsTable(update)
+  await getDatabase()('settings')
+    .where({ id: defaultSettings.id })
+    .update(settingsTable)
 }

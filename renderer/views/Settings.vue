@@ -14,7 +14,7 @@
       </Typography>
     </template>
     <div class="space-x-2">
-      <Button>Add directory</Button>
+      <Button @click="onAddDirectory">Add directory</Button>
       <Button @click="onScan">Scan</Button>
     </div>
   </SettingsSection>
@@ -36,5 +36,17 @@ async function onScan() {
   scanning.value = true
   await window.electronAPI.scanTracks()
   scanning.value = false
+}
+
+async function onAddDirectory() {
+  const result = await window.electronAPI.selectDirectory()
+  if (!result.canceled) {
+    await settingsStore.updateSettings({
+      audioDirectories: [
+        ...settings.value.audioDirectories,
+        ...result.filePaths,
+      ],
+    })
+  }
 }
 </script>

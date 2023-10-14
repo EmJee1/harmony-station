@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { Settings } from '../../types/settings'
+import type { DbSettings } from '../../types/settings'
 
 export const useSettingsStore = defineStore('settings', () => {
-  const settings = ref<Settings>()
+  const settings = ref<DbSettings>()
 
   /**
    * Fetches the settings from the main process and updates the store.
@@ -15,8 +15,15 @@ export const useSettingsStore = defineStore('settings', () => {
     settings.value = await window.electronAPI.getSettings()
   }
 
+  async function updateSettings(update: Partial<DbSettings>) {
+    settings.value = { ...settings.value, ...update }
+    await window.electronAPI.updateSettings(update)
+    // TODO: success notification
+  }
+
   return {
     settings,
     fetchSettings,
+    updateSettings,
   }
 })
