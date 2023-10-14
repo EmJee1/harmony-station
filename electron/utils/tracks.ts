@@ -5,12 +5,25 @@ import type { DbTrack, Track } from '../../types/tracks'
 import type { Artist, DbArtist } from '../../types/artist'
 import type { AlbumTracks } from '../../types/album-tracks'
 import type { AlbumArtists } from '../../types/album-artists'
-import { TrackArtists } from '../../types/track-artists'
+import type { TrackArtists } from '../../types/track-artists'
+import { getCoverForTracks, toBase64DataString } from './metadata'
+
+function extractAlbumCover(album: string, tracks: IAudioMetadata[]) {
+  const tracksInAlbum = tracks.filter(track => track.common.album === album)
+  return getCoverForTracks(tracksInAlbum)
+}
 
 export function extractAlbumsFromTracks(tracks: IAudioMetadata[]) {
   const albums = tracks.map(track => track.common.album).filter(Boolean)
   const albumsWithoutDuplicates = Array.from(new Set(albums))
-  return albumsWithoutDuplicates.map<Album>(album => ({ title: album }))
+  return albumsWithoutDuplicates.map<Album>(album => {
+    const cover = extractAlbumCover(album, tracks)
+
+    return {
+      title: album,
+      cover: cover ? toBase64DataString(cover) : undefined,
+    }
+  })
 }
 
 export function extractArtistsFromTracks(tracks: IAudioMetadata[]) {

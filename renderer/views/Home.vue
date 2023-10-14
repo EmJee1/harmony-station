@@ -9,7 +9,7 @@
       v-for="album in albums"
       :title="album.title"
       :to="`/album/${album.id}`"
-      image="#"
+      :image="album.cover"
       class="w-48 min-w-[12rem]"
     >
       {{ album.title }}

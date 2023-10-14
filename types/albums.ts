@@ -3,6 +3,7 @@ import type { DbArtist } from './artist'
 
 export interface Album {
   title: string
+  cover?: string
 }
 
 export interface DbAlbum extends Album {

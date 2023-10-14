@@ -2,7 +2,11 @@
   <p v-if="!album">Loading...</p>
   <template v-else>
     <div class="flex items-center gap-4">
-      <img src="#" alt="" class="aspect-square w-16 bg-red-600 md:w-32" />
+      <img
+        :src="album.cover"
+        alt=""
+        class="aspect-square w-16 bg-red-600 md:w-32"
+      />
       <div>
         <Typography is="h1" variant="heading-1" weight="bold">
           {{ album.title }}
@@ -34,7 +38,6 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import type { DbTrack } from '../../types/tracks'
 import type { DbAlbum } from '../../types/albums'
-import type { DbArtist } from '../../types/artist'
 import { usePlayingStore } from '../stores/playing-store'
 import Typography from '../components/Typography.vue'
 import ButtonIcon from '../components/ButtonIcon.vue'
