@@ -23,5 +23,10 @@ export function toBase64DataString(picture: IPicture) {
 }
 
 export async function getMetadataForMusicFiles(paths: string[]) {
-  return await Promise.all(paths.map(getMetadataForMusicFile))
+  const output = []
+  for (const path of paths) {
+    output.push(await parseFile(path))
+  }
+
+  return output
 }
