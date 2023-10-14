@@ -27,15 +27,17 @@ import Button from '../components/Button.vue'
 import Typography from '../components/Typography.vue'
 import { useSettingsStore } from '../stores/settings-store'
 import SettingsSection from '../components/SettingsSection.vue'
+import { useFullscreenLoaderStore } from '../stores/fullscreen-loader'
 
-const scanning = ref(false)
+const { registerFullscreenLoader, unregisterFullscreenLoader } =
+  useFullscreenLoaderStore()
 const settingsStore = useSettingsStore()
 const { settings } = storeToRefs(settingsStore)
 
 async function onScan() {
-  scanning.value = true
+  registerFullscreenLoader('Scanning tracks...')
   await window.electronAPI.scanTracks()
-  scanning.value = false
+  unregisterFullscreenLoader()
 }
 
 async function onAddDirectory() {
