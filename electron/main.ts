@@ -33,7 +33,7 @@ import {
 import { addAlbumTracks, clearAlbumTracks } from './repositories/albumTracks'
 import { harmonyProtocolHandler } from './protocols/harmony-protocol'
 import { addAlbumArtists, clearAlbumArtists } from './repositories/albumArtists'
-import { addTrackArtists } from './repositories/trackArtists'
+import { addTrackArtists, clearTrackArtists } from './repositories/trackArtists'
 import { DbSettings } from '../types/settings'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -107,6 +107,7 @@ app.whenReady().then(async () => {
       clearAlbums(),
       clearArtists(),
       clearTracks(),
+      clearTrackArtists(),
     ])
 
     const files = await scanMusicFilesInFolder(settings.audioDirectories.at(0))
