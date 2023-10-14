@@ -12,5 +12,9 @@ export const router = createRouter({
       path: '/album/:id',
       component: () => import('./views/Album.vue'),
     },
+    {
+      path: '/settings',
+      component: () => import('./views/Settings.vue'),
+    },
   ],
 })

@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-3xl font-bold">Home</h1>
+  <Typography is="h1" variant="heading-1">Home</Typography>
   <button class="border border-amber-800 px-2 py-1" @click="onScan">
     Scan files
   </button>
@@ -21,6 +21,7 @@
 import { onMounted, ref } from 'vue'
 import Carousel from '../components/Carousel.vue'
 import Card from '../components/Card.vue'
+import Typography from '../components/Typography.vue'
 import type { DbAlbum } from '../../types/albums'
 
 const albums = ref<DbAlbum[]>([])
