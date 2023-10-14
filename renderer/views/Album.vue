@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import PlayIcon from '@heroicons/vue/24/outline/PlayIcon'
-import { onMounted, ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { DbTrack } from '../../types/tracks'
 import type { DbAlbum } from '../../types/albums'
@@ -47,9 +47,13 @@ const playingStore = usePlayingStore()
 
 const album = ref<Required<DbAlbum>>()
 
-onMounted(async () => {
-  album.value = await window.electronAPI.getAlbum(Number(route.params.id))
-})
+watch(
+  () => route.params.id,
+  async albumId => {
+    album.value = await window.electronAPI.getAlbum(Number(albumId))
+  },
+  { immediate: true }
+)
 
 function onPlay(track: DbTrack) {
   playingStore.currentTrack = track
