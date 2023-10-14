@@ -21,12 +21,20 @@
           <Spinner v-else-if="playingStatus === PlayingStatus.PlayRequested" />
           <PlayIcon v-else />
         </ButtonIcon>
-        <p v-if="playingStatus === PlayingStatus.Stopped">
+        <Typography
+          v-if="playingStatus === PlayingStatus.Stopped"
+          is="p"
+          variant="body"
+        >
           Nothing is playing right now
-        </p>
-        <p v-else-if="playingStatus === PlayingStatus.PlayRequested">
+        </Typography>
+        <Typography
+          v-else-if="playingStatus === PlayingStatus.PlayRequested"
+          is="p"
+          variant="body"
+        >
           Loading...
-        </p>
+        </Typography>
         <Seeker v-else class="w-full" />
       </div>
 
@@ -53,11 +61,12 @@ import PauseIcon from '@heroicons/vue/24/outline/PauseIcon'
 import SpeakerWaveIcon from '@heroicons/vue/24/outline/SpeakerWaveIcon'
 import SpeakerXMarkIcon from '@heroicons/vue/24/outline/SpeakerXMarkIcon'
 import { storeToRefs } from 'pinia'
-import { PlayingStatus, usePlayingStore } from '../stores/playing-store'
-import Container from './Container.vue'
 import ButtonIcon from './ButtonIcon.vue'
+import Container from './Container.vue'
 import Seeker from './Seeker.vue'
 import Spinner from './Spinner.vue'
+import Typography from './Typography.vue'
+import { PlayingStatus, usePlayingStore } from '../stores/playing-store'
 
 const playingStore = usePlayingStore()
 
