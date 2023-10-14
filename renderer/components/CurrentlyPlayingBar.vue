@@ -1,6 +1,6 @@
 <template>
   <div class="fixed bottom-0 left-0 w-screen bg-slate-100 py-4">
-    <div class="container grid grid-cols-8 items-center gap-8">
+    <Container class="grid grid-cols-8 items-center gap-8">
       <div v-if="currentTrack" class="col-span-2 truncate">
         {{ currentTrack.title }}
       </div>
@@ -43,7 +43,7 @@
           @input="onVolumeChange"
         />
       </div>
-    </div>
+    </Container>
   </div>
 </template>
 
@@ -54,6 +54,7 @@ import SpeakerWaveIcon from '@heroicons/vue/24/outline/SpeakerWaveIcon'
 import SpeakerXMarkIcon from '@heroicons/vue/24/outline/SpeakerXMarkIcon'
 import { storeToRefs } from 'pinia'
 import { PlayingStatus, usePlayingStore } from '../stores/playing-store'
+import Container from './Container.vue'
 import ButtonIcon from './ButtonIcon.vue'
 import Seeker from './Seeker.vue'
 import Spinner from './Spinner.vue'
