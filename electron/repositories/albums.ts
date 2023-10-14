@@ -21,8 +21,11 @@ export async function getAlbumArtistsInAlbum(id: number): Promise<DbArtist[]> {
     .select('artists.*')
 }
 
-export async function searchAlbums(query: string): Promise<DbAlbum[]> {
-  return getDatabase()('albums').whereLike('title', `%${query}%`)
+export async function searchAlbums(
+  query: string,
+  limit = 10
+): Promise<DbAlbum[]> {
+  return getDatabase()('albums').whereLike('title', `%${query}%`).limit(limit)
 }
 
 export async function getAlbums(limit?: number) {

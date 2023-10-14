@@ -125,7 +125,7 @@ app.whenReady().then(async () => {
   })
   ipcMain.handle('search', async (_: IpcMainInvokeEvent, query: string) => {
     return {
-      albums: await searchAlbums(query),
+      albums: await searchAlbums(query, 6),
     }
   })
 
