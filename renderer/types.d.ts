@@ -8,6 +8,7 @@ export interface IElectronAPI {
   getAlbums: (limit: number) => Promise<DbAlbum[]>
   getAlbum: (id: number) => Promise<Required<DbAlbum>>
   scanTracks: () => Promise<void>
+  search: (query) => Promise<{ albums: DbAlbum[] }>
 }
 
 declare global {

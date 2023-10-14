@@ -18,10 +18,7 @@
         >
           <PlayIcon v-if="playingStatus === PlayingStatus.Paused" />
           <PauseIcon v-else-if="playingStatus === PlayingStatus.Playing" />
-          <ArrowPathIcon
-            v-else-if="playingStatus === PlayingStatus.PlayRequested"
-            class="animate-spin"
-          />
+          <Spinner v-else-if="playingStatus === PlayingStatus.PlayRequested" />
           <PlayIcon v-else />
         </ButtonIcon>
         <p v-if="playingStatus === PlayingStatus.Stopped">
@@ -53,13 +50,13 @@
 <script setup lang="ts">
 import PlayIcon from '@heroicons/vue/24/outline/PlayIcon'
 import PauseIcon from '@heroicons/vue/24/outline/PauseIcon'
-import ArrowPathIcon from '@heroicons/vue/24/outline/ArrowPathIcon'
 import SpeakerWaveIcon from '@heroicons/vue/24/outline/SpeakerWaveIcon'
 import SpeakerXMarkIcon from '@heroicons/vue/24/outline/SpeakerXMarkIcon'
 import { storeToRefs } from 'pinia'
 import { PlayingStatus, usePlayingStore } from '../stores/playing-store'
 import ButtonIcon from './ButtonIcon.vue'
 import Seeker from './Seeker.vue'
+import Spinner from './Spinner.vue'
 
 const playingStore = usePlayingStore()
 

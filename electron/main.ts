@@ -27,6 +27,7 @@ import {
   getAlbumArtistsInAlbum,
   getAlbums,
   getTracksInAlbum,
+  searchAlbums,
 } from './repositories/albums'
 import { addAlbumTracks, clearAlbumTracks } from './repositories/albumTracks'
 import { harmonyProtocolHandler } from './protocols/harmony-protocol'
@@ -121,6 +122,11 @@ app.whenReady().then(async () => {
 
     const trackArtists = extractTrackArtists(dbTracks, dbArtists, metadata)
     await addTrackArtists(trackArtists)
+  })
+  ipcMain.handle('search', async (_: IpcMainInvokeEvent, query: string) => {
+    return {
+      albums: await searchAlbums(query),
+    }
   })
 
   // TODO: update to protocol.handle because registerFileProtocol is deprecated

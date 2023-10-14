@@ -1,5 +1,5 @@
 import { getDatabase } from './database'
-import type { Album } from '../../types/albums'
+import type { Album, DbAlbum } from '../../types/albums'
 import type { DbTrack } from '../../types/tracks'
 import type { DbArtist } from '../../types/artist'
 
@@ -19,6 +19,10 @@ export async function getAlbumArtistsInAlbum(id: number): Promise<DbArtist[]> {
     .where({ albumId: id })
     .join('artists', 'album_artists.artistId', 'artists.id')
     .select('artists.*')
+}
+
+export async function searchAlbums(query: string): Promise<DbAlbum[]> {
+  return getDatabase()('albums').whereLike('title', `%${query}%`)
 }
 
 export async function getAlbums(limit?: number) {
