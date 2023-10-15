@@ -66,27 +66,28 @@ import Container from './Container.vue'
 import Seeker from './Seeker.vue'
 import Spinner from './Spinner.vue'
 import Typography from './Typography.vue'
+import { useAudioControls } from '../composables/audio-controls'
 import { PlayingStatus, usePlayingStore } from '../stores/playing-store'
 
-const playingStore = usePlayingStore()
+const { playingStatus, volume, muted, currentTrack } = storeToRefs(
+  usePlayingStore()
+)
 
-const { audioElement, playingStatus, volume, muted, currentTrack } =
-  storeToRefs(playingStore)
-const { toggleMute } = playingStore
+const { toggleMute, setVolume, play, pause } = useAudioControls()
 
 function onMainActionClick(playingStatus: PlayingStatus) {
   switch (playingStatus) {
     case PlayingStatus.Playing:
-      audioElement.value.pause()
+      pause()
       break
     case PlayingStatus.Paused:
-      audioElement.value.play()
+      play()
       break
   }
 }
 
 function onVolumeChange(e: Event) {
   const newVolume = (e.target as HTMLInputElement).valueAsNumber
-  audioElement.value.volume = newVolume
+  setVolume(newVolume)
 }
 </script>

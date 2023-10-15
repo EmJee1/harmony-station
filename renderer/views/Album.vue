@@ -2,11 +2,19 @@
   <p v-if="!album">Loading...</p>
   <template v-else>
     <div class="flex items-center gap-4">
-      <img
-        :src="album.cover"
-        alt=""
-        class="aspect-square w-16 bg-red-600 md:w-32"
-      />
+      <button
+        class="group relative h-16 w-16 border-none md:h-32 md:w-32"
+        @click="onPlayAlbum"
+      >
+        <img :src="album.cover" alt="" class="h-full w-full bg-red-600" />
+        <div
+          class="absolute inset-0 hidden h-full w-full bg-black/20 group-hover:block"
+        >
+          <PlayIcon
+            class="absolute left-1/2 top-1/2 z-10 hidden h-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 text-white group-hover:block"
+          />
+        </div>
+      </button>
       <div>
         <Typography is="h1" variant="heading-1" weight="bold">
           {{ album.title }}
@@ -37,15 +45,25 @@
 </template>
 
 <script setup lang="ts">
+import PlayIcon from '@heroicons/vue/24/outline/PlayIcon'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import PlayTrackButton from '../components/PlayTrackButton.vue'
 import Typography from '../components/Typography.vue'
+import { useAudioControls } from '../composables/audio-controls'
 import type { DbAlbum } from '../../types/albums'
 
 const route = useRoute()
+const { addToQueue, playTrack, clearQueue } = useAudioControls()
 
 const album = ref<Required<DbAlbum>>()
+
+function onPlayAlbum() {
+  const [firstTrack, ...rest] = album.value.tracks
+  playTrack(firstTrack)
+  clearQueue()
+  addToQueue(...rest)
+}
 
 watch(
   () => route.params.id,

@@ -1,6 +1,7 @@
 import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import { DbTrack } from '../../types/tracks'
+import { useAudioControls } from '../composables/audio-controls'
+import type { DbTrack } from '../../types/tracks'
 
 export enum PlayingStatus {
   Stopped,
@@ -10,6 +11,7 @@ export enum PlayingStatus {
 }
 
 export const usePlayingStore = defineStore('playing', () => {
+  const { skip } = useAudioControls()
   const currentTrack = ref<DbTrack>()
   const playingStatus = ref(PlayingStatus.Stopped)
   const duration = ref(0)
@@ -48,13 +50,7 @@ export const usePlayingStore = defineStore('playing', () => {
   }
 
   audioElement.value.onended = () => {
-    playingStatus.value = PlayingStatus.Stopped
-    currentTrack.value = null
-  }
-
-  function toggleMute() {
-    muted.value = !muted.value
-    audioElement.value.muted = muted.value
+    skip()
   }
 
   watch(
@@ -78,6 +74,5 @@ export const usePlayingStore = defineStore('playing', () => {
     currentTime,
     volume,
     muted,
-    toggleMute,
   }
 })
