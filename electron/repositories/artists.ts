@@ -1,5 +1,5 @@
 import { getDatabase } from './database'
-import type { Artist } from '../../types/artist'
+import type { Artist, DbArtist } from '../../types/artist'
 import type { DbTrack } from '../../types/tracks'
 
 export async function getArtist(id: number) {
@@ -15,6 +15,10 @@ export async function getTracksByArtist(id: number): Promise<DbTrack[]> {
 
 export async function getArtists() {
   return getDatabase()('artists')
+}
+
+export async function searchArtists(query: string, limit = 10) {
+  return getDatabase()('artists').whereLike('name', `%${query}%`).limit(limit)
 }
 
 export async function addArtists(artists: Artist[]) {

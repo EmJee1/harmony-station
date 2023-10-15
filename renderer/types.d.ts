@@ -9,7 +9,7 @@ export interface IElectronAPI {
   getAlbum: (id: number) => Promise<Required<DbAlbum>>
   getArtist: (id: number) => Promise<Required<DbArtist>>
   scanTracks: () => Promise<void>
-  search: (query) => Promise<{ albums: DbAlbum[] }>
+  search: (query: string) => Promise<{ albums: DbAlbum[]; artists: DbArtist[] }>
   selectDirectory: () => Promise<{ filePaths: string[]; canceled: boolean }>
 }
 
