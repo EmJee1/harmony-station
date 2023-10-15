@@ -1,7 +1,11 @@
 <template>
   <ButtonIcon @click="onClick">
     <PlayIcon
-      v-if="!isCurrentTrack || playingStatus === PlayingStatus.Stopped"
+      v-if="
+        !isCurrentTrack ||
+        playingStatus === PlayingStatus.Stopped ||
+        (isCurrentTrack && playingStatus === PlayingStatus.Paused)
+      "
     />
     <PauseIcon
       v-else-if="isCurrentTrack && playingStatus === PlayingStatus.Playing"
