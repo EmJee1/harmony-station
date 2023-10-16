@@ -104,12 +104,20 @@ app
     })
     ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => {
       const album = await getAlbum(id)
+      if (!album) {
+        return null
+      }
+
       album.tracks = await getTracksInAlbum(id)
       album.albumArtists = await getAlbumArtistsInAlbum(id)
       return album
     })
     ipcMain.handle('get:artist', async (_: IpcMainInvokeEvent, id: number) => {
       const artist = await getArtist(id)
+      if (!artist) {
+        return null
+      }
+
       artist.tracks = await getTracksByArtist(id)
       return artist
     })
