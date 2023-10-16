@@ -11,7 +11,7 @@
           class="absolute inset-0 hidden h-full w-full bg-black/20 group-hover:block"
         >
           <PlayIcon
-            class="absolute left-1/2 top-1/2 z-10 hidden h-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 text-white group-hover:block"
+            class="absolute left-1/2 top-1/2 hidden h-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 text-white group-hover:block"
           />
         </div>
       </button>

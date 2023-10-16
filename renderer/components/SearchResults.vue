@@ -1,5 +1,5 @@
 <template>
-  <div class="absolute left-0 w-full rounded-b bg-slate-100 p-3 shadow">
+  <div class="absolute left-0 z-10 w-full rounded-b bg-slate-100 p-3 shadow">
     <div v-if="hasResults" class="space-y-6">
       <div v-if="searchResult.albums.length">
         <Typography is="p" variant="body" weight="bold">
