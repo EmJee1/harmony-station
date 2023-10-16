@@ -1,12 +1,13 @@
 import type { IAudioMetadata } from 'music-metadata'
+import { filterDefined } from './array'
 import { getArtistsFromString, getArtistsFromTags } from './artists'
+import { getCoverForTracks, toBase64DataString } from './metadata'
 import type { Album, DbAlbum } from '../../types/albums'
 import type { DbTrack, Track } from '../../types/tracks'
 import type { Artist, DbArtist } from '../../types/artist'
 import type { AlbumTracks } from '../../types/album-tracks'
 import type { AlbumArtists } from '../../types/album-artists'
 import type { TrackArtists } from '../../types/track-artists'
-import { getCoverForTracks, toBase64DataString } from './metadata'
 
 function extractAlbumCover(album: string, tracks: IAudioMetadata[]) {
   const tracksInAlbum = tracks.filter(track => track.common.album === album)
@@ -14,7 +15,7 @@ function extractAlbumCover(album: string, tracks: IAudioMetadata[]) {
 }
 
 export function extractAlbumsFromTracks(tracks: IAudioMetadata[]) {
-  const albums = tracks.map(track => track.common.album).filter(Boolean)
+  const albums = tracks.map(track => track.common.album).filter(filterDefined)
   const albumsWithoutDuplicates = Array.from(new Set(albums))
   return albumsWithoutDuplicates.map<Album>(album => {
     const cover = extractAlbumCover(album, tracks)
@@ -40,7 +41,7 @@ export function extractTracksFromTracks(
     return {
       path: paths[index],
       title: track.common.title ?? 'Unknown title',
-      genre: track.common.genre.length ? track.common.genre.at(0) : undefined,
+      genre: track.common.genre?.length ? track.common.genre.at(0) : undefined,
       year: track.common.year,
     }
   })
@@ -52,7 +53,7 @@ export function extractAlbumTracks(
   meta: IAudioMetadata[]
 ) {
   return tracks
-    .map<AlbumTracks>((track, index) => {
+    .map<AlbumTracks | undefined>((track, index) => {
       const album = albums.find(album => {
         return album.title === meta[index].common.album
       })
@@ -66,7 +67,7 @@ export function extractAlbumTracks(
         trackId: track.id,
       }
     })
-    .filter(Boolean)
+    .filter(filterDefined)
 }
 
 export function extractAlbumArtists(
@@ -76,8 +77,12 @@ export function extractAlbumArtists(
 ) {
   return albums.flatMap(album => {
     const artistIds = meta
-      .filter(metaItem => metaItem.common.album === album.title)
-      .flatMap(metaItem => getArtistsFromString(metaItem.common.albumartist))
+      .filter(metaItem => {
+        return (
+          metaItem.common.album === album.title && metaItem.common.albumartist
+        )
+      })
+      .flatMap(metaItem => getArtistsFromString(metaItem.common.albumartist!))
       .map(albumArtist => {
         const artist = artists.find(artist => artist.name === albumArtist)
         if (!artist) {
@@ -87,7 +92,7 @@ export function extractAlbumArtists(
 
         return artist.id
       })
-      .filter(Boolean)
+      .filter(filterDefined)
 
     const artistIdsWithoutDuplicates = Array.from(new Set(artistIds))
     return artistIdsWithoutDuplicates.map<AlbumArtists>(artistId => ({
@@ -114,7 +119,7 @@ export function extractTrackArtists(
 
         return art.id
       })
-      .filter(Boolean)
+      .filter(filterDefined)
 
     const artistIdsWithoutDuplicates = Array.from(new Set(artistIds))
     return artistIdsWithoutDuplicates.map<TrackArtists>(artistId => ({

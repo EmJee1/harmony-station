@@ -4,13 +4,16 @@ import {
   type IAudioMetadata,
   type IPicture,
 } from 'music-metadata'
+import { filterDefined } from './array'
 
 export async function getMetadataForMusicFile(path: string) {
   return parseFile(path)
 }
 
 export function getCoverForTracks(files: IAudioMetadata[]) {
-  const pictures = files.flatMap(file => file.common.picture).filter(Boolean)
+  const pictures = files
+    .flatMap(file => file.common.picture)
+    .filter(filterDefined)
   if (!pictures.length) {
     return null
   }
