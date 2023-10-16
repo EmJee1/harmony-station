@@ -11,17 +11,19 @@
 </template>
 
 <script setup lang="ts">
+import { useAudioControls } from '../composables/audio-controls'
 import { usePlayingStore } from '../stores/playing-store'
 
+const { play, pause, setCurrentTime } = useAudioControls()
 const playingStore = usePlayingStore()
 
 function onSeekStart() {
-  playingStore.audioElement.pause()
+  pause()
 }
 
 function onSeekEnd(e: Event) {
   const seekValue = (e.target as HTMLInputElement).valueAsNumber
-  playingStore.audioElement.currentTime = seekValue
-  playingStore.audioElement.play()
+  setCurrentTime(seekValue)
+  play()
 }
 </script>

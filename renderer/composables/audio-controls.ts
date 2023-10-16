@@ -19,7 +19,7 @@ export function useAudioControls() {
   }
 
   function play() {
-    audioElement.value.play()
+    void audioElement.value.play()
   }
 
   function pause() {
@@ -49,6 +49,10 @@ export function useAudioControls() {
     queue.value = []
   }
 
+  function setCurrentTime(time: number) {
+    audioElement.value.currentTime = time
+  }
+
   const canSkip = computed(() => queue.value.length > 0)
 
   return {
@@ -60,6 +64,7 @@ export function useAudioControls() {
     playTrack,
     addToQueue,
     clearQueue,
+    setCurrentTime,
     canSkip,
   }
 }

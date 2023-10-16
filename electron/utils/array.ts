@@ -8,3 +8,7 @@ export function chunk<T>(array: T[], size: number): T[][] {
     array.slice(index * size, index * size + size)
   )
 }
+
+export function filterDefined<T>(value?: T | undefined | null): value is T {
+  return Boolean(value)
+}

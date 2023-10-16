@@ -27,13 +27,15 @@ import ButtonIcon from './ButtonIcon.vue'
 import { PlayingStatus, usePlayingStore } from '../stores/playing-store'
 import { DbTrack } from '../../types/tracks'
 import Spinner from './Spinner.vue'
+import { useAudioControls } from '../composables/audio-controls'
 
 const props = defineProps<{
   track: DbTrack
 }>()
 
+const { play, pause } = useAudioControls()
 const playingStore = usePlayingStore()
-const { playingStatus, currentTrack, audioElement } = storeToRefs(playingStore)
+const { playingStatus, currentTrack } = storeToRefs(playingStore)
 
 const isCurrentTrack = computed(
   () => playingStore.currentTrack?.id === props.track.id
@@ -46,12 +48,12 @@ function onClick() {
   }
 
   if (playingStatus.value === PlayingStatus.Playing) {
-    audioElement.value.pause()
+    pause()
     return
   }
 
   if (playingStatus.value === PlayingStatus.Paused) {
-    audioElement.value.play()
+    play()
     return
   }
 }

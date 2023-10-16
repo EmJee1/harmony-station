@@ -12,7 +12,7 @@ export enum PlayingStatus {
 
 export const usePlayingStore = defineStore('playing', () => {
   const { skip } = useAudioControls()
-  const currentTrack = ref<DbTrack>()
+  const currentTrack = ref<DbTrack | null>(null)
   const playingStatus = ref(PlayingStatus.Stopped)
   const duration = ref(0)
   const currentTime = ref(0)

@@ -1,9 +1,13 @@
 import { Directive } from 'vue'
 
-export const clickOutside: Directive = {
-  beforeMount(e, binding) {
+interface ClickOutsideHTMLElement extends HTMLElement {
+  clickOutsideEvent: (event: MouseEvent) => void
+}
+
+export const clickOutside: Directive<ClickOutsideHTMLElement, () => void> = {
+  beforeMount: function (e, binding) {
     e.clickOutsideEvent = (event: MouseEvent) => {
-      if (!(e == event.target || e.contains(event.target))) {
+      if (!(e == event.target || e.contains(event.target as Node))) {
         binding.value()
       }
     }

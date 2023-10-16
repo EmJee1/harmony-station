@@ -18,9 +18,7 @@ const props = withDefaults(
   { is: 'button' }
 )
 
-const emit = defineEmits<{
-  (e: 'click'): unknown
-}>()
+const emit = defineEmits<(e: 'click') => unknown>()
 
 function onClick() {
   if (props.disabled) {

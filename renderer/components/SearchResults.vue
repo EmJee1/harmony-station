@@ -70,9 +70,7 @@ const props = defineProps<{
   loading: boolean
 }>()
 
-const emit = defineEmits<{
-  (e: 'result-click'): void
-}>()
+const emit = defineEmits<(e: 'result-click') => void>()
 
 const hasResults = computed(() => {
   return props.searchResult.albums.length || props.searchResult.artists.length

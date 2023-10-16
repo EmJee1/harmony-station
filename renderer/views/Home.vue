@@ -15,7 +15,6 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
-import Carousel from '../components/Carousel.vue'
 import Card from '../components/Card.vue'
 import Typography from '../components/Typography.vue'
 import type { DbAlbum } from '../../types/albums'

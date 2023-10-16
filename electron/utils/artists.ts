@@ -1,4 +1,5 @@
 import type { IAudioMetadata } from 'music-metadata'
+import { filterDefined } from './array'
 
 const ARTIST_TAG_SEPARATOR = '; '
 
@@ -10,8 +11,8 @@ export function getArtistsFromTags(track: IAudioMetadata) {
   return [
     track.common.artist,
     track.common.albumartist,
-    ...(track.common.artists || []),
+    ...(track.common.artists ?? []),
   ]
-    .filter(Boolean)
-    .flatMap(getArtistsFromString)
+    .filter(filterDefined)
+    .flatMap(artist => getArtistsFromString(artist))
 }

@@ -60,9 +60,9 @@ const createWindow = () => {
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL)
+    void mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL)
   } else {
-    mainWindow.loadFile(
+    void mainWindow.loadFile(
       path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
     )
   }
@@ -87,78 +87,81 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(async () => {
-  await createSchemas()
+app
+  .whenReady()
+  .then(async () => {
+    await createSchemas()
 
-  ipcMain.handle('get:settings', getSettings)
-  ipcMain.handle(
-    'update:settings',
-    (_: IpcMainInvokeEvent, update: Partial<DbSettings>) => {
-      return updateSettings(update)
-    }
-  )
-  ipcMain.handle('get:albums', (_: IpcMainInvokeEvent, limit: number) => {
-    return getAlbums(limit)
-  })
-  ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => {
-    const album = await getAlbum(id)
-    album.tracks = await getTracksInAlbum(id)
-    album.albumArtists = await getAlbumArtistsInAlbum(id)
-    return album
-  })
-  ipcMain.handle('get:artist', async (_: IpcMainInvokeEvent, id: number) => {
-    const artist = await getArtist(id)
-    artist.tracks = await getTracksByArtist(id)
-    return artist
-  })
-  ipcMain.handle('scan-tracks', async () => {
-    const settings = await getSettings()
-    await Promise.all([
-      clearAlbumArtists(),
-      clearAlbumTracks(),
-      clearAlbums(),
-      clearArtists(),
-      clearTracks(),
-      clearTrackArtists(),
-    ])
-
-    const files = await scanMusicFilesInFolders(settings.audioDirectories)
-    const metadata = await getMetadataForMusicFiles(files)
-    const artistNames = extractArtistsFromTracks(metadata)
-    await addArtists(artistNames)
-    const albumNames = extractAlbumsFromTracks(metadata)
-    await addAlbums(albumNames)
-    const tracks = extractTracksFromTracks(files, metadata)
-    await addTracks(tracks)
-
-    const dbAlbums = await getAlbums()
-    const dbTracks = await getTracks()
-    const dbArtists = await getArtists()
-
-    const albumTracks = extractAlbumTracks(dbAlbums, dbTracks, metadata)
-    await addAlbumTracks(albumTracks)
-
-    const albumArtists = extractAlbumArtists(dbAlbums, dbArtists, metadata)
-    await addAlbumArtists(albumArtists)
-
-    const trackArtists = extractTrackArtists(dbTracks, dbArtists, metadata)
-    await addTrackArtists(trackArtists)
-  })
-  ipcMain.handle('search', async (_: IpcMainInvokeEvent, query: string) => {
-    return {
-      albums: await searchAlbums(query, 6),
-      artists: await searchArtists(query, 6),
-    }
-  })
-  ipcMain.handle('select-directory', async () => {
-    return dialog.showOpenDialog({
-      properties: ['openDirectory'],
+    ipcMain.handle('get:settings', getSettings)
+    ipcMain.handle(
+      'update:settings',
+      (_: IpcMainInvokeEvent, update: Partial<DbSettings>) => {
+        return updateSettings(update)
+      }
+    )
+    ipcMain.handle('get:albums', (_: IpcMainInvokeEvent, limit: number) => {
+      return getAlbums(limit)
     })
+    ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => {
+      const album = await getAlbum(id)
+      album.tracks = await getTracksInAlbum(id)
+      album.albumArtists = await getAlbumArtistsInAlbum(id)
+      return album
+    })
+    ipcMain.handle('get:artist', async (_: IpcMainInvokeEvent, id: number) => {
+      const artist = await getArtist(id)
+      artist.tracks = await getTracksByArtist(id)
+      return artist
+    })
+    ipcMain.handle('scan-tracks', async () => {
+      const settings = await getSettings()
+      await Promise.all([
+        clearAlbumArtists(),
+        clearAlbumTracks(),
+        clearAlbums(),
+        clearArtists(),
+        clearTracks(),
+        clearTrackArtists(),
+      ])
+
+      const files = await scanMusicFilesInFolders(settings.audioDirectories)
+      const metadata = await getMetadataForMusicFiles(files)
+      const artistNames = extractArtistsFromTracks(metadata)
+      await addArtists(artistNames)
+      const albumNames = extractAlbumsFromTracks(metadata)
+      await addAlbums(albumNames)
+      const tracks = extractTracksFromTracks(files, metadata)
+      await addTracks(tracks)
+
+      const dbAlbums = await getAlbums()
+      const dbTracks = await getTracks()
+      const dbArtists = await getArtists()
+
+      const albumTracks = extractAlbumTracks(dbAlbums, dbTracks, metadata)
+      await addAlbumTracks(albumTracks)
+
+      const albumArtists = extractAlbumArtists(dbAlbums, dbArtists, metadata)
+      await addAlbumArtists(albumArtists)
+
+      const trackArtists = extractTrackArtists(dbTracks, dbArtists, metadata)
+      await addTrackArtists(trackArtists)
+    })
+    ipcMain.handle('search', async (_: IpcMainInvokeEvent, query: string) => {
+      return {
+        albums: await searchAlbums(query, 6),
+        artists: await searchArtists(query, 6),
+      }
+    })
+    ipcMain.handle('select-directory', async () => {
+      return dialog.showOpenDialog({
+        properties: ['openDirectory'],
+      })
+    })
+
+    // TODO: update to protocol.handle because registerFileProtocol is deprecated
+    // https://www.electronjs.org/docs/latest/breaking-changes#planned-breaking-api-changes-250
+    protocol.registerFileProtocol('harmony', harmonyProtocolHandler)
+
+    createWindow()
   })
-
-  // TODO: update to protocol.handle because registerFileProtocol is deprecated
-  // https://www.electronjs.org/docs/latest/breaking-changes#planned-breaking-api-changes-250
-  protocol.registerFileProtocol('harmony', harmonyProtocolHandler)
-
-  createWindow()
-})
+  .catch(console.error)
