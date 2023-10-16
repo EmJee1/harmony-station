@@ -6,5 +6,5 @@ export interface Artist {
 
 export interface DbArtist extends Artist {
   id: number
-  tracks: DbTrack[]
+  tracks?: DbTrack[]
 }
