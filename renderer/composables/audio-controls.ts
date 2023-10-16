@@ -1,4 +1,5 @@
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 import { PlayingStatus, usePlayingStore } from '../stores/playing-store'
 import { useQueueStore } from '../stores/queue-store'
 import type { DbTrack } from '../../types/tracks'
@@ -48,6 +49,8 @@ export function useAudioControls() {
     queue.value = []
   }
 
+  const canSkip = computed(() => queue.value.length > 0)
+
   return {
     toggleMute,
     setVolume,
@@ -57,5 +60,6 @@ export function useAudioControls() {
     playTrack,
     addToQueue,
     clearQueue,
+    canSkip,
   }
 }

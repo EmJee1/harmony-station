@@ -21,6 +21,9 @@
           <Spinner v-else-if="playingStatus === PlayingStatus.PlayRequested" />
           <PlayIcon v-else />
         </ButtonIcon>
+        <ButtonIcon :disabled="!canSkip" @click="skip">
+          <ForwardIcon />
+        </ButtonIcon>
         <Typography
           v-if="playingStatus === PlayingStatus.Stopped"
           is="p"
@@ -56,6 +59,7 @@
 </template>
 
 <script setup lang="ts">
+import ForwardIcon from '@heroicons/vue/24/outline/ForwardIcon'
 import PlayIcon from '@heroicons/vue/24/outline/PlayIcon'
 import PauseIcon from '@heroicons/vue/24/outline/PauseIcon'
 import SpeakerWaveIcon from '@heroicons/vue/24/outline/SpeakerWaveIcon'
@@ -73,7 +77,7 @@ const { playingStatus, volume, muted, currentTrack } = storeToRefs(
   usePlayingStore()
 )
 
-const { toggleMute, setVolume, play, pause } = useAudioControls()
+const { toggleMute, setVolume, play, pause, skip, canSkip } = useAudioControls()
 
 function onMainActionClick(playingStatus: PlayingStatus) {
   switch (playingStatus) {
