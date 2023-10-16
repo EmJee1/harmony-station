@@ -20,7 +20,7 @@ export const usePlayingStore = defineStore('playing', () => {
   const muted = ref(false)
   const audioElement = ref(new Audio())
 
-  audioElement.value.onerror = err => {
+  audioElement.value.onerror = () => {
     // TODO: show user-facing error message
     console.log('Error playing audio element')
   }

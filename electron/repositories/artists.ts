@@ -1,5 +1,5 @@
 import { getDatabase } from './database'
-import type { Artist, DbArtist } from '../../types/artist'
+import type { Artist } from '../../types/artist'
 import type { DbTrack } from '../../types/tracks'
 
 export async function getArtist(id: number) {
