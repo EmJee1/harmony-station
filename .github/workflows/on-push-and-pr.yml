@@ -13,6 +13,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: 'package.json'
+      - run: npm ci
       - run: npm run lint:electron
       - run: npm run lint:renderer
       - run: npm run test
