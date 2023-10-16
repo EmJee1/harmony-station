@@ -1,0 +1,13 @@
+name: Lint and test
+'on':
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test_build_and_lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: npm run lint
+      - run: npm run test
