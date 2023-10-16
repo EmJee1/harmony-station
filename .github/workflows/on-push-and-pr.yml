@@ -9,5 +9,6 @@ jobs:
   test_build_and_lint:
     runs-on: ubuntu-latest
     steps:
-      - run: npm run lint
+      - run: npm run lint:electron
+      - run: npm run lint:renderer
       - run: npm run test
