@@ -22,16 +22,11 @@
   "dependencies": {
     "@heroicons/vue": "^2.0.18",
     "electron-squirrel-startup": "^1.0.0",
-    "i": "^0.3.7",
     "knex": "^2.5.1",
     "music-metadata": "^7.13.4",
-    "npm": "^10.2.0",
     "pinia": "^2.1.6",
     "readdirp": "^3.6.0",
-    "rxdb": "^14.17.1",
-    "rxjs": "^7.8.1",
     "sqlite3": "^5.1.6",
-    "v-click-outside": "^3.2.0",
     "vue": "^3.3.4",
     "vue-debounce": "^4.0.0",
     "vue-router": "^4.2.4"
