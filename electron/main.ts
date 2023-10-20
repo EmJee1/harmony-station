@@ -56,6 +56,7 @@ const createWindow = () => {
     minWidth: 768, // TailwindCSS md breakpoint
     width: 800,
     height: 600,
+    title: 'Harmony Station',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
