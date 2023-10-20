@@ -1,5 +1,5 @@
 <template>
-  <ButtonIcon @click="onClick">
+  <ButtonIcon @click="onClick" aria-label="play track">
     <PlayIcon
       v-if="
         !isCurrentTrack ||

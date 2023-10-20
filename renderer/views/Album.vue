@@ -25,30 +25,19 @@
       </div>
     </div>
     <Button @click="onPlayAlbum" class="mt-6">Play album</Button>
-    <ul class="mt-6 space-y-4">
-      <li
-        v-for="(track, index) in album.tracks"
-        :key="track.id"
-        class="flex gap-2"
-      >
-        <PlayTrackButton :track="track" />
-        <span>#{{ index + 1 }}</span>
-        <span>{{ track.title }}</span>
-      </li>
-    </ul>
+    <TrackTable :tracks="album.tracks" class="mt-6" />
   </template>
 </template>
 
 <script setup lang="ts">
-import PlayIcon from '@heroicons/vue/24/outline/PlayIcon'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import PlayTrackButton from '../components/PlayTrackButton.vue'
 import Typography from '../components/Typography.vue'
 import { useAudioControls } from '../composables/audio-controls'
 import type { DbAlbum } from '../../types/albums'
 import Button from '../components/Button.vue'
 import Lightbox from '../components/Lightbox.vue'
+import TrackTable from '../components/TrackTable.vue'
 
 const route = useRoute()
 const { addToQueue, playTrack, clearQueue } = useAudioControls()
