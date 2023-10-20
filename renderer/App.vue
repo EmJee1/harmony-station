@@ -16,6 +16,7 @@
     </Container>
     <CurrentlyPlayingBar />
     <FullscreenLoader v-if="fullscreenLoaderActive" />
+    <ToastProvider />
   </div>
 </template>
 
@@ -29,6 +30,7 @@ import Container from './components/Container.vue'
 import CurrentlyPlayingBar from './components/CurrentlyPlayingBar.vue'
 import FullscreenLoader from './components/FullscreenLoader.vue'
 import Search from './components/Search.vue'
+import ToastProvider from './components/ToastProvider.vue'
 import { useSettingsStore } from './stores/settings-store'
 import { useFullscreenLoaderStore } from './stores/fullscreen-loader'
 

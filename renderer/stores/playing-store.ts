@@ -1,6 +1,7 @@
 import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { useAudioControls } from '../composables/audio-controls'
+import { useToastStore } from './toast-store'
 import type { DbTrack } from '../../types/tracks'
 
 export enum PlayingStatus {
@@ -12,6 +13,7 @@ export enum PlayingStatus {
 
 export const usePlayingStore = defineStore('playing', () => {
   const { skip } = useAudioControls()
+  const { registerToast } = useToastStore()
   const currentTrack = ref<DbTrack | null>(null)
   const playingStatus = ref(PlayingStatus.Stopped)
   const duration = ref(0)
@@ -21,8 +23,9 @@ export const usePlayingStore = defineStore('playing', () => {
   const audioElement = ref(new Audio())
 
   audioElement.value.onerror = () => {
-    // TODO: show user-facing error message
-    console.log('Error playing audio element')
+    registerToast('Something went wrong playing the track', {
+      variant: 'error',
+    })
   }
 
   audioElement.value.ontimeupdate = () => {
