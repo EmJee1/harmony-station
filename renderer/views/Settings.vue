@@ -39,7 +39,7 @@ import ButtonIcon from '../components/ButtonIcon.vue'
 import Typography from '../components/Typography.vue'
 import { useSettingsStore } from '../stores/settings-store'
 import SettingsSection from '../components/SettingsSection.vue'
-import { useFullscreenLoaderStore } from '../stores/fullscreen-loader'
+import { useFullscreenLoaderStore } from '../stores/fullscreen-loader-store'
 
 const { registerFullscreenLoader, unregisterFullscreenLoader } =
   useFullscreenLoaderStore()

@@ -32,7 +32,7 @@ import FullscreenLoader from './components/FullscreenLoader.vue'
 import Search from './components/Search.vue'
 import ToastProvider from './components/ToastProvider.vue'
 import { useSettingsStore } from './stores/settings-store'
-import { useFullscreenLoaderStore } from './stores/fullscreen-loader'
+import { useFullscreenLoaderStore } from './stores/fullscreen-loader-store'
 
 const { fetchSettings } = useSettingsStore()
 const { fullscreenLoaderActive } = storeToRefs(useFullscreenLoaderStore())

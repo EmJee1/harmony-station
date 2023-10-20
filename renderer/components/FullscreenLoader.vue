@@ -16,7 +16,7 @@
 import { storeToRefs } from 'pinia'
 import Spinner from './Spinner.vue'
 import Typography from './Typography.vue'
-import { useFullscreenLoaderStore } from '../stores/fullscreen-loader'
+import { useFullscreenLoaderStore } from '../stores/fullscreen-loader-store'
 
 const { message } = storeToRefs(useFullscreenLoaderStore())
 </script>
