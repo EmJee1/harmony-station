@@ -20,7 +20,8 @@ export const useSettingsStore = defineStore('settings', () => {
   async function updateSettings(update: Partial<DbSettings>) {
     settings.value = { ...settings.value, ...update }
     await window.electronAPI.updateSettings(update)
-    registerToast('Settings saved successfully', {
+    registerToast({
+      message: 'Settings saved successfully',
       variant: 'success',
       duration: 3000,
     })

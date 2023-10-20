@@ -42,12 +42,10 @@ export function useAudioControls() {
   function playQueueTrack(track: DbTrack) {
     const queueIndex = queue.value.findIndex(item => item.id === track.id)
     if (queueIndex === -1) {
-      registerToast(
-        'Failed play track from queue because it is not in the queue',
-        {
-          variant: 'error',
-        }
-      )
+      registerToast({
+        message: 'Failed play track from queue because it is not in the queue',
+        variant: 'error',
+      })
       return
     }
 

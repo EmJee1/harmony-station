@@ -6,26 +6,26 @@ export interface Toast {
   id: string
   message: string
   variant: 'info' | 'success' | 'error'
-  duration: number
+}
+
+interface RegisterToastProps extends Partial<Omit<Toast, 'id'>> {
+  message: string
+  duration?: number
 }
 
 export const useToastStore = defineStore('toasts', () => {
   const toasts = ref<Toast[]>([])
 
-  function registerToast(
-    message: string,
-    options: Partial<Omit<Toast, 'id' | 'message'>> = {}
-  ) {
+  function registerToast(options: RegisterToastProps) {
     const toast: Toast = {
       id: nanoid(),
-      message,
+      message: options.message,
       variant: options.variant ?? 'info',
-      duration: options.duration ?? 6000,
     }
 
     toasts.value.push(toast)
 
-    setTimeout(() => removeToast(toast.id), toast.duration)
+    setTimeout(() => removeToast(toast.id), options.duration ?? 6000)
   }
 
   function removeToast(id: string) {

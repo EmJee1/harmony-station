@@ -23,7 +23,8 @@ export const usePlayingStore = defineStore('playing', () => {
   const audioElement = ref(new Audio())
 
   audioElement.value.onerror = () => {
-    registerToast('Something went wrong playing the track', {
+    registerToast({
+      message: 'Something went wrong playing the track',
       variant: 'error',
     })
   }
