@@ -10,6 +10,9 @@ export default {
       container: {
         center: true,
       },
+      gridTemplateRows: {
+        lightbox: '3.5rem, auto, 3.5rem',
+      },
     },
   },
   plugins: [],

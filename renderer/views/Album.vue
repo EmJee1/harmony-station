@@ -2,19 +2,13 @@
   <p v-if="!album">Loading...</p>
   <template v-else>
     <div class="flex items-center gap-4">
-      <button
-        class="group relative h-16 w-16 border-none md:h-32 md:w-32"
-        @click="onPlayAlbum"
-      >
-        <img :src="album.cover" alt="" class="h-full w-full bg-red-600" />
-        <div
-          class="absolute inset-0 hidden h-full w-full bg-black/20 group-hover:block"
-        >
-          <PlayIcon
-            class="absolute left-1/2 top-1/2 hidden h-1/2 w-1/2 -translate-x-1/2 -translate-y-1/2 text-white group-hover:block"
-          />
-        </div>
-      </button>
+      <Lightbox :src="album.cover" :subtitle="album.title">
+        <img
+          :src="album.cover"
+          alt=""
+          class="h-16 w-16 border-none bg-red-600 md:h-32 md:w-32"
+        />
+      </Lightbox>
       <div>
         <Typography is="h1" variant="heading-1" weight="bold">
           {{ album.title }}
@@ -30,6 +24,7 @@
         </RouterLink>
       </div>
     </div>
+    <Button @click="onPlayAlbum" class="mt-6">Play album</Button>
     <ul class="mt-6 space-y-4">
       <li
         v-for="(track, index) in album.tracks"
@@ -52,6 +47,8 @@ import PlayTrackButton from '../components/PlayTrackButton.vue'
 import Typography from '../components/Typography.vue'
 import { useAudioControls } from '../composables/audio-controls'
 import type { DbAlbum } from '../../types/albums'
+import Button from '../components/Button.vue'
+import Lightbox from '../components/Lightbox.vue'
 
 const route = useRoute()
 const { addToQueue, playTrack, clearQueue } = useAudioControls()
