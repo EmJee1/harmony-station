@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, onMounted, ref, type Component } from 'vue'
+import { onBeforeUnmount, onMounted, ref, type Component } from 'vue'
 
 const props = defineProps<{
   is: string | Component
@@ -22,7 +22,7 @@ onMounted(() => {
   contextMenuRef.value!.addEventListener('contextmenu', onContextMenu)
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   contextMenuRef.value!.removeEventListener('contextmenu', onContextMenu)
 })
 </script>
