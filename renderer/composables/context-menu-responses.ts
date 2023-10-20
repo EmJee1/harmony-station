@@ -11,7 +11,7 @@ export function useContextMenuResponses() {
     useAudioControls()
 
   function handleTrackAction(arg: TrackContextMenuResponse) {
-    const track = JSON.parse(arg.track)
+    const track = JSON.parse(arg.track) as DbTrack
 
     switch (arg.option) {
       case 'add-to-queue':
@@ -26,7 +26,7 @@ export function useContextMenuResponses() {
   }
 
   function handleQueueItemAction(arg: QueueItemContextMenuResponse) {
-    const track: DbTrack = JSON.parse(arg.track)
+    const track = JSON.parse(arg.track) as DbTrack
 
     switch (arg.option) {
       case 'play':

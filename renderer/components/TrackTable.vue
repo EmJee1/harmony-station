@@ -36,12 +36,11 @@
 </template>
 
 <script setup lang="ts">
-import TrackTablePlayTrack from './track-table/TrackTablePlayTrack.vue'
-import { DbTrack } from '../../types/tracks'
 import TrackTablePlayQueueTrack from './track-table/TrackTablePlayQueueTrack.vue'
+import TrackTablePlayTrack from './track-table/TrackTablePlayTrack.vue'
 import ContextMenu from './ContextMenu.vue'
-import { computed } from 'vue'
-import { ContextMenuRequest } from '../../types/context-menu'
+import type { DbTrack } from '../../types/tracks'
+import type { ContextMenuRequest } from '../../types/context-menu'
 
 type Column = 'play-track' | 'play-queue-track' | 'title' | 'year'
 
@@ -54,10 +53,6 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   columns: ['play-track', 'title', 'year'],
 })
-
-const contextMenuVersion = computed(() =>
-  props.isQueue ? 'queue-item' : 'track'
-)
 
 interface BaseColumn {
   type: 'from-track' | 'custom'
