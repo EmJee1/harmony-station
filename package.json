@@ -9,8 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint:electron": "eslint -c .eslintrc.electron.json --ext .ts .",
-    "lint:renderer": "eslint -c .eslintrc.renderer.json --ext .ts,.vue .",
+    "lint": "eslint -c .eslintrc.json --ext .ts,.vue .",
     "test": "jest"
   },
   "keywords": [],

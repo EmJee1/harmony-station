@@ -20,9 +20,5 @@
       ".vue"
     ]
   },
-  "parser": "vue-eslint-parser",
-  "ignorePatterns": [
-    "electron",
-    "types"
-  ]
+  "parser": "vue-eslint-parser"
 }
