@@ -1,4 +1,4 @@
-import { Directive } from 'vue'
+import type { Directive } from 'vue'
 
 interface ClickOutsideHTMLElement extends HTMLElement {
   clickOutsideEvent: (event: MouseEvent) => void
