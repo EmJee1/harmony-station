@@ -11,7 +11,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import PlayTrackButton from '../components/PlayTrackButton.vue'
 import Typography from '../components/Typography.vue'
 import type { DbArtist } from '../../types/artist'
 import TrackTable from '../components/TrackTable.vue'

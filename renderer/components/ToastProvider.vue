@@ -7,9 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import ExclamationCircleIcon from '@heroicons/vue/24/outline/ExclamationCircleIcon'
 import { storeToRefs } from 'pinia'
-import Typography from './Typography.vue'
 import { useToastStore } from '../stores/toast-store'
 import Toast from './Toast.vue'
 

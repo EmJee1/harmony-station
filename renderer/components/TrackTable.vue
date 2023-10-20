@@ -36,7 +36,7 @@ import TrackTablePlayQueueTrack from './track-table/TrackTablePlayQueueTrack.vue
 
 type Column = 'play-track' | 'play-queue-track' | 'title' | 'year'
 
-type Props = {
+interface Props {
   columns?: Column[]
   tracks: DbTrack[]
 }
