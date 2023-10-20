@@ -1,5 +1,9 @@
 <template>
-  <ButtonIcon @click="onPlayQueueTrack" aria-label="play track">
+  <ButtonIcon
+    @click="onPlayQueueTrack"
+    aria-label="play track"
+    class="translate-y-1"
+  >
     <PlayIcon />
   </ButtonIcon>
 </template>
