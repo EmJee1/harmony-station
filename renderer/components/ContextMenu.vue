@@ -6,16 +6,20 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref, type Component } from 'vue'
+import type { ContextMenuRequest } from '../../types/context-menu'
 
 const props = defineProps<{
   is: string | Component
-  version: 'track' | 'queue-item'
+  contextMenuArg: ContextMenuRequest
 }>()
 
 const contextMenuRef = ref<HTMLElement>()
 
 function onContextMenu() {
-  window.electronAPI.spawnContextMenu(props.version)
+  window.electronAPI.spawnContextMenu({
+    version: props.contextMenuArg.version,
+    track: props.contextMenuArg.track,
+  })
 }
 
 onMounted(() => {

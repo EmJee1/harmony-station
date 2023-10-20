@@ -53,6 +53,19 @@ export function useAudioControls() {
     playTrack(track)
   }
 
+  function removeTrackFromQueue(track: DbTrack) {
+    const queueIndex = queue.value.findIndex(item => item.id === track.id)
+    if (queueIndex === -1) {
+      registerToast({
+        message: 'Failed play remove track because it is not in the queue',
+        variant: 'error',
+      })
+      return
+    }
+
+    queue.value.splice(queueIndex, 1)
+  }
+
   function playTrack(track: DbTrack) {
     currentTrack.value = track
   }
@@ -78,6 +91,7 @@ export function useAudioControls() {
     pause,
     skip,
     playQueueTrack,
+    removeTrackFromQueue,
     playTrack,
     addToQueue,
     clearQueue,

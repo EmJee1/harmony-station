@@ -33,7 +33,9 @@ import Search from './components/Search.vue'
 import ToastProvider from './components/ToastProvider.vue'
 import { useSettingsStore } from './stores/settings-store'
 import { useFullscreenLoaderStore } from './stores/fullscreen-loader-store'
+import { useContextMenuResponses } from './composables/context-menu-responses'
 
+useContextMenuResponses()
 const { fetchSettings } = useSettingsStore()
 const { fullscreenLoaderActive } = storeToRefs(useFullscreenLoaderStore())
 

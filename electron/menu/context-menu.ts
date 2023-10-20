@@ -1,41 +1,83 @@
-import { MenuItemConstructorOptions } from 'electron'
+import type { BrowserWindow, MenuItemConstructorOptions } from 'electron'
+import type {
+  ContextMenuRequest,
+  QueueItemContextMenuResponse,
+  TrackContextMenuResponse,
+} from '../../types/context-menu'
 
-const trackContextMenu: MenuItemConstructorOptions[] = [
-  {
-    label: 'Play',
-    click: () => {
-      console.log('Clicked the Play menu-item')
-    },
-  },
-  {
-    label: 'Add to queue',
-    click: () => {
-      console.log('Clicked the Add to queue menu-item')
-    },
-  },
-]
+function getTrackContextMenu(
+  browserWindow: BrowserWindow,
+  args: ContextMenuRequest
+): MenuItemConstructorOptions[] {
+  return [
+    {
+      label: 'Play',
+      click: () => {
+        const arg: TrackContextMenuResponse = {
+          version: 'track',
+          track: args.track,
+          option: 'play',
+        }
 
-const queueItemContextMenu: MenuItemConstructorOptions[] = [
-  {
-    label: 'Play',
-    click: () => {
-      console.log('Clicked the Play menu-item')
+        browserWindow.webContents.send('context-menu-action', arg)
+      },
     },
-  },
-  {
-    label: 'Remove from queue',
-    click: () => {
-      console.log('Clicked the Remove from queue menu-item')
-    },
-  },
-]
+    {
+      label: 'Add to queue',
+      click: () => {
+        const arg: TrackContextMenuResponse = {
+          version: 'track',
+          track: args.track,
+          option: 'add-to-queue',
+        }
 
-export function getContextMenuForVersion(version: 'track' | 'queue-item') {
-  switch (version) {
+        browserWindow.webContents.send('context-menu-action', arg)
+      },
+    },
+  ]
+}
+
+function getQueueItemContextMenu(
+  browserWindow: BrowserWindow,
+  args: ContextMenuRequest
+): MenuItemConstructorOptions[] {
+  return [
+    {
+      label: 'Play',
+      click: () => {
+        const arg: QueueItemContextMenuResponse = {
+          version: 'queue-item',
+          track: args.track,
+          option: 'play',
+        }
+
+        browserWindow.webContents.send('context-menu-action', arg)
+      },
+    },
+    {
+      label: 'Remove from queue',
+      click: () => {
+        const arg: QueueItemContextMenuResponse = {
+          version: 'queue-item',
+          track: args.track,
+          option: 'remove-from-queue',
+        }
+
+        browserWindow.webContents.send('context-menu-action', arg)
+      },
+    },
+  ]
+}
+
+export function getContextMenuForVersion(
+  browserWindow: BrowserWindow,
+  args: ContextMenuRequest
+) {
+  switch (args.version) {
     case 'track':
-      return trackContextMenu
+      return getTrackContextMenu(browserWindow, args)
     case 'queue-item':
-      return queueItemContextMenu
+      return getQueueItemContextMenu(browserWindow, args)
     default:
       throw new Error(`Unknown context-menu version`)
   }

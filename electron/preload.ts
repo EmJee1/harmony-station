@@ -1,5 +1,14 @@
-import { contextBridge, ipcRenderer } from 'electron'
-import { DbSettings } from '../types/settings'
+import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
+import type { DbSettings } from '../types/settings'
+import type {
+  ContextMenuRequest,
+  ContextMenuResponse,
+} from '../types/context-menu'
+
+type IpcRendererOnCallback = (
+  event: IpcRendererEvent,
+  arg: ContextMenuResponse
+) => void
 
 contextBridge.exposeInMainWorld('electronAPI', {
   getSettings: () => ipcRenderer.invoke('get:settings'),
@@ -11,6 +20,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   scanTracks: () => ipcRenderer.invoke('scan-tracks'),
   search: (query: string) => ipcRenderer.invoke('search', query),
   selectDirectory: () => ipcRenderer.invoke('select-directory'),
-  spawnContextMenu: (version: 'track' | 'queue-item') =>
-    ipcRenderer.invoke('spawn-context-menu', version),
+  spawnContextMenu: (args: ContextMenuRequest) =>
+    ipcRenderer.invoke('spawn-context-menu', args),
+  onContextMenuAction: (callback: IpcRendererOnCallback) =>
+    ipcRenderer.on('context-menu-action', callback),
 })

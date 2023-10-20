@@ -12,7 +12,7 @@
         v-for="track in tracks"
         :key="track.id"
         is="tr"
-        :version="contextMenuVersion"
+        :context-menu-arg="getContextMenuArgs(track)"
         class="hover:bg-slate-100"
       >
         <td v-for="column in columns" :key="column" class="py-2">
@@ -41,6 +41,7 @@ import { DbTrack } from '../../types/tracks'
 import TrackTablePlayQueueTrack from './track-table/TrackTablePlayQueueTrack.vue'
 import ContextMenu from './ContextMenu.vue'
 import { computed } from 'vue'
+import { ContextMenuRequest } from '../../types/context-menu'
 
 type Column = 'play-track' | 'play-queue-track' | 'title' | 'year'
 
@@ -77,5 +78,19 @@ const columnConfig: Record<Column, ColumnFromTrack | CustomColumn> = {
   'play-queue-track': { name: 'Play', type: 'custom' },
   title: { name: 'Title', type: 'from-track', key: 'title' },
   year: { name: 'Year', type: 'from-track', key: 'year' },
+}
+
+function getContextMenuArgs(track: DbTrack): ContextMenuRequest {
+  if (props.isQueue) {
+    return {
+      version: 'queue-item',
+      track: JSON.stringify(track),
+    }
+  }
+
+  return {
+    version: 'track',
+    track: JSON.stringify(track),
+  }
 }
 </script>

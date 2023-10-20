@@ -4,6 +4,7 @@
     v-if="queue.length"
     :tracks="queue"
     :columns="['play-queue-track', 'title', 'year']"
+    is-queue
     class="mt-6"
   />
   <NoResults v-else title="The queue is empty" class="" />

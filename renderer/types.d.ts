@@ -1,6 +1,11 @@
+import type { IpcRendererEvent } from 'electron'
 import type { DbSettings } from '../types/settings'
 import type { DbAlbum } from '../types/albums'
 import type { DbArtist } from '../types/artist'
+import type {
+  ContextMenuRequest,
+  ContextMenuResponse,
+} from '../types/context-menu'
 
 export interface IElectronAPI {
   getSettings: () => Promise<DbSettings>
@@ -11,7 +16,10 @@ export interface IElectronAPI {
   scanTracks: () => Promise<void>
   search: (query: string) => Promise<{ albums: DbAlbum[]; artists: DbArtist[] }>
   selectDirectory: () => Promise<{ filePaths: string[]; canceled: boolean }>
-  spawnContextMenu: (version: 'track' | 'queue-item') => void
+  spawnContextMenu: (args: ContextMenuRequest) => void
+  onContextMenuAction: (
+    cb: (event: IpcRendererEvent, arg: ContextMenuResponse) => unknown
+  ) => unknown
 }
 
 declare global {
