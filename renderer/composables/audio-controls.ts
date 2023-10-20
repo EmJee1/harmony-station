@@ -2,12 +2,14 @@ import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 import { PlayingStatus, usePlayingStore } from '../stores/playing-store'
 import { useQueueStore } from '../stores/queue-store'
+import { useToastStore } from '../stores/toast-store'
 import type { DbTrack } from '../../types/tracks'
 
 export function useAudioControls() {
   const playingStore = usePlayingStore()
   const { audioElement, muted, currentTrack } = storeToRefs(playingStore)
   const { queue } = storeToRefs(useQueueStore())
+  const { registerToast } = useToastStore()
 
   function toggleMute() {
     muted.value = !muted.value
@@ -40,7 +42,12 @@ export function useAudioControls() {
   function playQueueTrack(track: DbTrack) {
     const queueIndex = queue.value.findIndex(item => item.id === track.id)
     if (queueIndex === -1) {
-      // TODO: show user error
+      registerToast(
+        'Failed play track from queue because it is not in the queue',
+        {
+          variant: 'error',
+        }
+      )
       return
     }
 

@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import type { DbSettings } from '../../types/settings'
+import { useToastStore } from './toast-store'
 
 export const useSettingsStore = defineStore('settings', () => {
+  const { registerToast } = useToastStore()
   const settings = ref<DbSettings>()
 
   /**
@@ -18,7 +20,10 @@ export const useSettingsStore = defineStore('settings', () => {
   async function updateSettings(update: Partial<DbSettings>) {
     settings.value = { ...settings.value, ...update }
     await window.electronAPI.updateSettings(update)
-    // TODO: success notification
+    registerToast('Settings saved successfully', {
+      variant: 'success',
+      duration: 3000,
+    })
   }
 
   return {

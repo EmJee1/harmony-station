@@ -5,7 +5,7 @@ import { ref } from 'vue'
 export interface Toast {
   id: string
   message: string
-  variant: 'info' | 'error'
+  variant: 'info' | 'success' | 'error'
   duration: number
 }
 
