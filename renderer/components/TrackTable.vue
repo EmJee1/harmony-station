@@ -8,7 +8,13 @@
       </tr>
     </thead>
     <TransitionGroup name="table-rows" tag="tbody">
-      <tr v-for="track in tracks" :key="track.id" class="hover:bg-slate-100">
+      <ContextMenu
+        v-for="track in tracks"
+        :key="track.id"
+        is="tr"
+        :version="contextMenuVersion"
+        class="hover:bg-slate-100"
+      >
         <td v-for="column in columns" :key="column" class="py-2">
           <template v-if="columnConfig[column].type === 'from-track'">
             {{ track[(columnConfig[column] as ColumnFromTrack).key] }}
@@ -24,7 +30,7 @@
             />
           </template>
         </td>
-      </tr>
+      </ContextMenu>
     </TransitionGroup>
   </table>
 </template>
@@ -33,17 +39,24 @@
 import TrackTablePlayTrack from './track-table/TrackTablePlayTrack.vue'
 import { DbTrack } from '../../types/tracks'
 import TrackTablePlayQueueTrack from './track-table/TrackTablePlayQueueTrack.vue'
+import ContextMenu from './ContextMenu.vue'
+import { computed } from 'vue'
 
 type Column = 'play-track' | 'play-queue-track' | 'title' | 'year'
 
 interface Props {
+  isQueue?: boolean
   columns?: Column[]
   tracks: DbTrack[]
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   columns: ['play-track', 'title', 'year'],
 })
+
+const contextMenuVersion = computed(() =>
+  props.isQueue ? 'queue-item' : 'track'
+)
 
 interface BaseColumn {
   type: 'from-track' | 'custom'

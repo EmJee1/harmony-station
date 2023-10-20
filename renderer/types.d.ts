@@ -11,6 +11,7 @@ export interface IElectronAPI {
   scanTracks: () => Promise<void>
   search: (query: string) => Promise<{ albums: DbAlbum[]; artists: DbArtist[] }>
   selectDirectory: () => Promise<{ filePaths: string[]; canceled: boolean }>
+  spawnContextMenu: (version: 'track' | 'queue-item') => void
 }
 
 declare global {

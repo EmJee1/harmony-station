@@ -5,6 +5,7 @@ import {
   protocol,
   BrowserWindow,
   dialog,
+  Menu,
   type IpcMainInvokeEvent,
 } from 'electron'
 import { getSettings, updateSettings } from './repositories/settings'
@@ -42,6 +43,7 @@ import { harmonyProtocolHandler } from './protocols/harmony-protocol'
 import { addAlbumArtists, clearAlbumArtists } from './repositories/albumArtists'
 import { addTrackArtists, clearTrackArtists } from './repositories/trackArtists'
 import { DbSettings } from '../types/settings'
+import { trackContextMenu } from './menu/context-menu'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -165,6 +167,18 @@ app
         properties: ['openDirectory'],
       })
     })
+    ipcMain.handle(
+      'spawn-context-menu',
+      async (event: IpcMainInvokeEvent, version: 'track' | 'queue-item') => {
+        const menu = Menu.buildFromTemplate(trackContextMenu)
+        const window = BrowserWindow.fromWebContents(event.sender)
+        if (!window) {
+          return
+        }
+
+        menu.popup({ window })
+      }
+    )
 
     // TODO: update to protocol.handle because registerFileProtocol is deprecated
     // https://www.electronjs.org/docs/latest/breaking-changes#planned-breaking-api-changes-250

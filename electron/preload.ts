@@ -11,4 +11,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   scanTracks: () => ipcRenderer.invoke('scan-tracks'),
   search: (query: string) => ipcRenderer.invoke('search', query),
   selectDirectory: () => ipcRenderer.invoke('select-directory'),
+  spawnContextMenu: (version: 'track' | 'queue-item') =>
+    ipcRenderer.invoke('spawn-context-menu', version),
 })
