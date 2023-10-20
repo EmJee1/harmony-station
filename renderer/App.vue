@@ -13,8 +13,8 @@
     </div>
     <Container class="mt-8">
       <RouterView />
-      <CurrentlyPlayingBar />
     </Container>
+    <CurrentlyPlayingBar />
     <FullscreenLoader v-if="fullscreenLoaderActive" />
   </div>
 </template>
