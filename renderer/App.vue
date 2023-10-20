@@ -11,7 +11,7 @@
         </ButtonIcon>
       </Container>
     </div>
-    <Container class="mt-8">
+    <Container class="mb-20 mt-8">
       <RouterView />
     </Container>
     <CurrentlyPlayingBar />
