@@ -19,5 +19,9 @@ export const router = createRouter({
       path: '/settings',
       component: () => import('./views/Settings.vue'),
     },
+    {
+      path: '/queue',
+      component: () => import('./views/Queue.vue'),
+    },
   ],
 })

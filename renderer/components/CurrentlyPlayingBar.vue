@@ -42,6 +42,9 @@
       </div>
 
       <div class="col-span-2 flex items-center gap-4">
+        <ButtonIcon is="RouterLink" to="/queue">
+          <QueueListIcon />
+        </ButtonIcon>
         <ButtonIcon @click="toggleMute">
           <SpeakerXMarkIcon v-if="volume === 0 || muted" />
           <SpeakerWaveIcon v-else />
@@ -60,8 +63,9 @@
 
 <script setup lang="ts">
 import ForwardIcon from '@heroicons/vue/24/outline/ForwardIcon'
-import PlayIcon from '@heroicons/vue/24/outline/PlayIcon'
 import PauseIcon from '@heroicons/vue/24/outline/PauseIcon'
+import PlayIcon from '@heroicons/vue/24/outline/PlayIcon'
+import QueueListIcon from '@heroicons/vue/24/outline/QueueListIcon'
 import SpeakerWaveIcon from '@heroicons/vue/24/outline/SpeakerWaveIcon'
 import SpeakerXMarkIcon from '@heroicons/vue/24/outline/SpeakerXMarkIcon'
 import { storeToRefs } from 'pinia'
