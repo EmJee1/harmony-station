@@ -37,6 +37,17 @@ export function useAudioControls() {
     playingStore.currentTrack = null
   }
 
+  function playQueueTrack(track: DbTrack) {
+    const queueIndex = queue.value.findIndex(item => item.id === track.id)
+    if (queueIndex === -1) {
+      // TODO: show user error
+      return
+    }
+
+    queue.value.splice(0, queueIndex + 1)
+    playTrack(track)
+  }
+
   function playTrack(track: DbTrack) {
     currentTrack.value = track
   }
@@ -61,6 +72,7 @@ export function useAudioControls() {
     play,
     pause,
     skip,
+    playQueueTrack,
     playTrack,
     addToQueue,
     clearQueue,

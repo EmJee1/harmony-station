@@ -14,10 +14,13 @@
             {{ track[(columnConfig[column] as ColumnFromTrack).key] }}
           </template>
           <template v-else-if="columnConfig[column].type === 'custom'">
-            <PlayTrackButton
+            <TrackTablePlayTrack
               v-if="column === 'play-track'"
               :track="track"
-              class="translate-y-1"
+            />
+            <TrackTablePlayQueueTrack
+              v-else-if="column === 'play-queue-track'"
+              :track="track"
             />
           </template>
         </td>
@@ -27,10 +30,11 @@
 </template>
 
 <script setup lang="ts">
-import PlayTrackButton from './PlayTrackButton.vue'
+import TrackTablePlayTrack from './track-table/TrackTablePlayTrack.vue'
 import { DbTrack } from '../../types/tracks'
+import TrackTablePlayQueueTrack from './track-table/TrackTablePlayQueueTrack.vue'
 
-type Column = 'play-track' | 'title' | 'year'
+type Column = 'play-track' | 'play-queue-track' | 'title' | 'year'
 
 type Props = {
   columns?: Column[]
@@ -57,6 +61,7 @@ interface CustomColumn extends BaseColumn {
 
 const columnConfig: Record<Column, ColumnFromTrack | CustomColumn> = {
   'play-track': { name: 'Play', type: 'custom' },
+  'play-queue-track': { name: 'Play', type: 'custom' },
   title: { name: 'Title', type: 'from-track', key: 'title' },
   year: { name: 'Year', type: 'from-track', key: 'year' },
 }

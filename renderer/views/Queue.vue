@@ -1,6 +1,10 @@
 <template>
   <Typography is="h1" variant="heading-2">Queue</Typography>
-  <TrackTable :tracks="queue" :columns="['title', 'year']" class="mt-6" />
+  <TrackTable
+    :tracks="queue"
+    :columns="['play-queue-track', 'title', 'year']"
+    class="mt-6"
+  />
 </template>
 
 <script setup lang="ts">
