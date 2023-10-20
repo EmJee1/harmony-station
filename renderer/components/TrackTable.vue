@@ -7,7 +7,7 @@
         </th>
       </tr>
     </thead>
-    <tbody>
+    <TransitionGroup name="table-rows" tag="tbody">
       <tr v-for="track in tracks" :key="track.id" class="hover:bg-slate-100">
         <td v-for="column in columns" :key="column" class="py-2">
           <template v-if="columnConfig[column].type === 'from-track'">
@@ -25,7 +25,7 @@
           </template>
         </td>
       </tr>
-    </tbody>
+    </TransitionGroup>
   </table>
 </template>
 
