@@ -37,6 +37,6 @@ export function getContextMenuForVersion(version: 'track' | 'queue-item') {
     case 'queue-item':
       return queueItemContextMenu
     default:
-      throw new Error(`Unknown context-menu version: "${version}"`)
+      throw new Error(`Unknown context-menu version`)
   }
 }

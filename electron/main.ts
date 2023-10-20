@@ -169,7 +169,7 @@ app
     })
     ipcMain.handle(
       'spawn-context-menu',
-      async (event: IpcMainInvokeEvent, version: 'track' | 'queue-item') => {
+      (event: IpcMainInvokeEvent, version: 'track' | 'queue-item') => {
         const window = BrowserWindow.fromWebContents(event.sender)
         if (!window) {
           return
