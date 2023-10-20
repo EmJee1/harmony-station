@@ -22,9 +22,11 @@ export const usePlayingStore = defineStore('playing', () => {
   const muted = ref(false)
   const audioElement = ref(new Audio())
 
+  // Error during the loading of the audio
   audioElement.value.onerror = () => {
+    playingStatus.value = PlayingStatus.Stopped
     registerToast({
-      message: 'Something went wrong playing the track',
+      message: 'Something went wrong loading while track',
       variant: 'error',
     })
   }
