@@ -1,5 +1,3 @@
-import type { DbTrack } from './tracks'
-
 type ContextMenuVersion = 'track' | 'queue-item'
 type TrackContextMenuOption = 'play' | 'add-to-queue'
 type QueueItemContextMenuOption = 'play' | 'remove-from-queue'
