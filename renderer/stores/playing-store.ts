@@ -26,7 +26,7 @@ export const usePlayingStore = defineStore('playing', () => {
   audioElement.value.onerror = () => {
     playingStatus.value = PlayingStatus.Stopped
     registerToast({
-      message: 'Something went wrong loading while track',
+      message: 'Something went wrong while loading the track',
       variant: 'error',
     })
   }

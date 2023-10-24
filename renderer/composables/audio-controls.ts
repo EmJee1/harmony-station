@@ -43,7 +43,8 @@ export function useAudioControls() {
     const queueIndex = queue.value.findIndex(item => item.id === track.id)
     if (queueIndex === -1) {
       registerToast({
-        message: 'Failed play track from queue because it is not in the queue',
+        message:
+          'Failed to play track from queue because it is not in the queue',
         variant: 'error',
       })
       return
@@ -57,7 +58,7 @@ export function useAudioControls() {
     const queueIndex = queue.value.findIndex(item => item.id === track.id)
     if (queueIndex === -1) {
       registerToast({
-        message: 'Failed play remove track because it is not in the queue',
+        message: 'Failed to remove track because it is not in the queue',
         variant: 'error',
       })
       return
