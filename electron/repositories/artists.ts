@@ -7,10 +7,35 @@ export async function getArtist(id: number) {
 }
 
 export async function getTracksByArtist(id: number): Promise<DbTrack[]> {
-  return getDatabase()('track_artists')
-    .where({ artistId: id })
-    .join('tracks', 'track_artists.trackId', 'tracks.id')
-    .select('tracks.*')
+  const result: (DbTrack & { artistName: string; artistId: number })[] =
+    await getDatabase()('track_artists')
+      .innerJoin('tracks', 'tracks.id', 'track_artists.trackId')
+      .innerJoin('artists', 'artists.id', 'track_artists.artistId')
+      .whereIn('trackId', builder => {
+        void builder
+          .select('trackId')
+          .from('track_artists')
+          .where('artistId', id)
+      })
+      .select('tracks.*', {
+        artistId: 'artists.id',
+        artistName: 'artists.name',
+      })
+
+  return result.reduce<DbTrack[]>((acc, currentValue) => {
+    const { artistName, artistId, ...rest } = currentValue
+    let currentIndex = acc.findIndex(track => track.id === rest.id)
+    if (currentIndex === -1) {
+      currentIndex = acc.push({ ...rest, artists: [] }) - 1
+    }
+
+    acc[currentIndex].artists!.push({
+      name: artistName,
+      id: artistId,
+    })
+
+    return acc
+  }, [])
 }
 
 export async function getArtists() {

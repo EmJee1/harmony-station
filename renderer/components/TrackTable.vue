@@ -28,6 +28,10 @@
               v-else-if="column === 'play-queue-track'"
               :track="track"
             />
+            <TrackTableArtists
+              v-else-if="column === 'artists'"
+              :artists="track.artists"
+            />
           </template>
         </td>
       </ContextMenu>
@@ -36,13 +40,14 @@
 </template>
 
 <script setup lang="ts">
+import TrackTableArtists from './track-table/TrackTableArtists.vue'
 import TrackTablePlayQueueTrack from './track-table/TrackTablePlayQueueTrack.vue'
 import TrackTablePlayTrack from './track-table/TrackTablePlayTrack.vue'
 import ContextMenu from './ContextMenu.vue'
 import type { DbTrack } from '../../types/tracks'
 import type { ContextMenuRequest } from '../../types/context-menu'
 
-type Column = 'play-track' | 'play-queue-track' | 'title' | 'year'
+type Column = 'play-track' | 'play-queue-track' | 'artists' | 'title' | 'year'
 
 interface Props {
   isQueue?: boolean
@@ -51,7 +56,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  columns: ['play-track', 'title', 'year'],
+  columns: ['play-track', 'title', 'artists', 'year'],
 })
 
 interface BaseColumn {
@@ -71,6 +76,7 @@ interface CustomColumn extends BaseColumn {
 const columnConfig: Record<Column, ColumnFromTrack | CustomColumn> = {
   'play-track': { name: 'Play', type: 'custom' },
   'play-queue-track': { name: 'Play', type: 'custom' },
+  artists: { name: 'Artists', type: 'custom' },
   title: { name: 'Title', type: 'from-track', key: 'title' },
   year: { name: 'Year', type: 'from-track', key: 'year' },
 }

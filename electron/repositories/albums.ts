@@ -8,10 +8,31 @@ export async function getAlbum(id: number) {
 }
 
 export async function getTracksInAlbum(id: number): Promise<DbTrack[]> {
-  return getDatabase()('album_tracks')
-    .where({ albumId: id })
-    .join('tracks', 'album_tracks.trackId', 'tracks.id')
-    .select('tracks.*')
+  const result: (DbTrack & { artistName: string; artistId: number })[] =
+    await getDatabase()('album_tracks')
+      .innerJoin('tracks', 'tracks.id', 'album_tracks.trackId')
+      .innerJoin('track_artists', 'track_artists.trackId', 'tracks.id')
+      .innerJoin('artists', 'artists.id', 'track_artists.artistId')
+      .where('album_tracks.albumId', id)
+      .select('tracks.*', {
+        artistId: 'artists.id',
+        artistName: 'artists.name',
+      })
+
+  return result.reduce<DbTrack[]>((acc, currentValue) => {
+    const { artistName, artistId, ...rest } = currentValue
+    let currentIndex = acc.findIndex(track => track.id === rest.id)
+    if (currentIndex === -1) {
+      currentIndex = acc.push({ ...rest, artists: [] }) - 1
+    }
+
+    acc[currentIndex].artists!.push({
+      name: artistName,
+      id: artistId,
+    })
+
+    return acc
+  }, [])
 }
 
 export async function getAlbumArtistsInAlbum(id: number): Promise<DbArtist[]> {
