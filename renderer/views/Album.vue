@@ -25,7 +25,11 @@
       </div>
     </div>
     <Button @click="onPlayAlbum" class="mt-6">Play album</Button>
-    <TrackTable :tracks="album.tracks" class="mt-6" />
+    <TrackTable
+      :tracks="album.tracks"
+      :columns="['play-track', 'title', 'artists', 'year']"
+      class="mt-6"
+    />
   </template>
 </template>
 

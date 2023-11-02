@@ -55,9 +55,7 @@ interface Props {
   tracks: DbTrack[]
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  columns: ['play-track', 'title', 'artists', 'year'],
-})
+const props = defineProps<Props>()
 
 interface BaseColumn {
   type: 'from-track' | 'custom'

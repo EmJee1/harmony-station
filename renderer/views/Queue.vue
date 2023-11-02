@@ -3,7 +3,7 @@
   <TrackTable
     v-if="queue.length"
     :tracks="queue"
-    :columns="['play-queue-track', 'title', 'year']"
+    :columns="['play-queue-track', 'title', 'artists', 'year']"
     is-queue
     class="mt-6"
   />

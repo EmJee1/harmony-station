@@ -4,7 +4,11 @@
     <Typography is="h1" variant="heading-1">
       {{ artist.name }}
     </Typography>
-    <TrackTable :tracks="artist.tracks" class="mt-6" />
+    <TrackTable
+      :tracks="artist.tracks"
+      :columns="['play-track', 'title', 'artists', 'year']"
+      class="mt-6"
+    />
   </template>
 </template>
 
