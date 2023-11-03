@@ -42,6 +42,24 @@
           </div>
         </div>
       </div>
+      <div v-if="searchResult.tracks.length">
+        <Typography is="p" variant="body" weight="bold">
+          Tracks ({{ searchResult.tracks.length }})
+        </Typography>
+        <div class="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-3">
+          <div v-for="track in searchResult.tracks" :key="track.id">
+            <RouterLink
+              :to="`/album/${track.album?.id}`"
+              class="flex items-center gap-4 hover:underline"
+              @click="emit('result-click')"
+            >
+              <Typography is="p" variant="body" class="truncate">
+                {{ track.title }}
+              </Typography>
+            </RouterLink>
+          </div>
+        </div>
+      </div>
     </div>
     <template v-else-if="!loading">
       <Typography is="p" variant="heading-3" weight="bold">
@@ -64,9 +82,10 @@ import { computed } from 'vue'
 import Typography from './Typography.vue'
 import type { DbAlbum } from '../../types/albums'
 import type { DbArtist } from '../../types/artist'
+import type { DbTrack } from '../../types/tracks'
 
 const props = defineProps<{
-  searchResult: { albums: DbAlbum[]; artists: DbArtist[] }
+  searchResult: { albums: DbAlbum[]; artists: DbArtist[]; tracks: DbTrack[] }
   loading: boolean
 }>()
 

@@ -1,4 +1,5 @@
-import { DbArtist } from './artist'
+import type { DbArtist } from './artist'
+import type { DbAlbum } from './albums'
 
 export interface Track {
   path: string
@@ -10,4 +11,5 @@ export interface Track {
 export interface DbTrack extends Track {
   id: number
   artists?: DbArtist[]
+  album?: DbAlbum
 }

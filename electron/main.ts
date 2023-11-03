@@ -9,7 +9,12 @@ import {
   type IpcMainInvokeEvent,
 } from 'electron'
 import { getSettings, updateSettings } from './repositories/settings'
-import { addTracks, getTracks, clearTracks } from './repositories/tracks'
+import {
+  addTracks,
+  getTracks,
+  clearTracks,
+  searchTracks,
+} from './repositories/tracks'
 import { scanMusicFilesInFolders } from './utils/files'
 import { getMetadataForMusicFiles } from './utils/metadata'
 import { createSchemas } from './schemas/create-schemas'
@@ -162,6 +167,7 @@ app
       return {
         albums: await searchAlbums(query, 6),
         artists: await searchArtists(query, 6),
+        tracks: await searchTracks(query, 6),
       }
     })
     ipcMain.handle('select-directory', async () => {

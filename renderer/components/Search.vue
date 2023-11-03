@@ -34,19 +34,25 @@ import SearchResults from './SearchResults.vue'
 import Spinner from './Spinner.vue'
 import type { DbAlbum } from '../../types/albums'
 import type { DbArtist } from '../../types/artist'
+import type { DbTrack } from '../../types/tracks'
 
 const query = ref('')
 const focussed = ref(false)
 const loading = ref(false)
-const searchResult = ref<{ albums: DbAlbum[]; artists: DbArtist[] }>({
+const searchResult = ref<{
+  albums: DbAlbum[]
+  artists: DbArtist[]
+  tracks: DbTrack[]
+}>({
   albums: [],
   artists: [],
+  tracks: [],
 })
 
 const searchResultsActive = computed(() => query.value && focussed.value)
 
 function resetSearchResult() {
-  searchResult.value = { albums: [], artists: [] }
+  searchResult.value = { albums: [], artists: [], tracks: [] }
 }
 
 function onSearchInput() {
