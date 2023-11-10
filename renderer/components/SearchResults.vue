@@ -49,7 +49,7 @@
         <div class="mt-4 grid grid-cols-2 gap-2 lg:grid-cols-3">
           <div v-for="track in searchResult.tracks" :key="track.id">
             <RouterLink
-              :to="`/album/${track.album?.id}`"
+              :to="`/album/${track.album?.id}?highlighted-track=${track.id}`"
               class="flex items-center gap-4 hover:underline"
               @click="emit('result-click')"
             >

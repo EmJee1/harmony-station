@@ -28,25 +28,27 @@
     <TrackTable
       :tracks="album.tracks"
       :columns="['play-track', 'title', 'artists', 'year']"
+      :highlighted-track-id="highlightedTrack"
       class="mt-6"
     />
   </template>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import Typography from '../components/Typography.vue'
 import { useAudioControls } from '../composables/audio-controls'
-import type { DbAlbum } from '../../types/albums'
+import Typography from '../components/Typography.vue'
 import Button from '../components/Button.vue'
 import Lightbox from '../components/Lightbox.vue'
 import TrackTable from '../components/TrackTable.vue'
+import type { DbAlbum } from '../../types/albums'
 
 const route = useRoute()
 const { addToQueue, playTrack, clearQueue } = useAudioControls()
 
 const album = ref<Required<DbAlbum>>()
+const highlightedTrack = ref<number | null>(null)
 
 function onPlayAlbum() {
   const [firstTrack, ...rest] = album.value.tracks
@@ -54,6 +56,26 @@ function onPlayAlbum() {
   clearQueue()
   addToQueue(...rest)
 }
+
+onMounted(() => {
+  const trackToHighlight = Number(route.query['highlighted-track'])
+  if (trackToHighlight && !isNaN(trackToHighlight)) {
+    setTimeout(() => {
+      highlightedTrack.value = trackToHighlight
+    }, 200)
+  }
+})
+
+watch(
+  () => highlightedTrack.value,
+  isHighlighted => {
+    if (isHighlighted) {
+      setTimeout(() => {
+        highlightedTrack.value = null
+      }, 800)
+    }
+  }
+)
 
 watch(
   () => route.params.id,

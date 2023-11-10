@@ -13,7 +13,10 @@
         :key="track.id"
         is="tr"
         :context-menu-arg="getContextMenuArgs(track)"
-        class="hover:bg-slate-100"
+        class="transition-colors hover:bg-slate-100"
+        :class="{
+          'bg-slate-200': highlightedTrackId === track.id,
+        }"
       >
         <td v-for="column in columns" :key="column" class="py-2">
           <template v-if="columnConfig[column].type === 'from-track'">
@@ -53,6 +56,7 @@ interface Props {
   isQueue?: boolean
   columns?: Column[]
   tracks: DbTrack[]
+  highlightedTrackId?: number | null
 }
 
 const props = defineProps<Props>()
