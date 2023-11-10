@@ -29,6 +29,7 @@ import {
 import {
   addArtists,
   clearArtists,
+  getAlbumsByArtist,
   getArtist,
   getArtists,
   getTracksByArtist,
@@ -128,6 +129,7 @@ app
       }
 
       artist.tracks = await getTracksByArtist(id)
+      artist.albums = await getAlbumsByArtist(id)
       return artist
     })
     ipcMain.handle('scan-tracks', async () => {

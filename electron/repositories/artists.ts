@@ -1,6 +1,7 @@
 import { getDatabase } from './database'
 import type { Artist } from '../../types/artist'
 import type { DbTrack } from '../../types/tracks'
+import type { DbAlbum } from '../../types/albums'
 
 export async function getArtist(id: number) {
   return getDatabase()('artists').where({ id }).first()
@@ -36,6 +37,13 @@ export async function getTracksByArtist(id: number): Promise<DbTrack[]> {
 
     return acc
   }, [])
+}
+
+export async function getAlbumsByArtist(id: number): Promise<DbAlbum[]> {
+  return getDatabase()('album_artists')
+    .innerJoin('albums', 'albums.id', 'album_artists.albumId')
+    .select('albums.*')
+    .where('artistId', id)
 }
 
 export async function getArtists() {
