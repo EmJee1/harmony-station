@@ -1,8 +1,16 @@
 <template>
-  <div class="fixed bottom-0 left-0 h-14 w-screen bg-slate-100">
+  <div class="fixed bottom-0 left-0 h-16 w-screen bg-slate-100">
     <Container class="grid h-full grid-cols-8 items-center gap-8">
-      <div v-if="currentTrack" class="col-span-2 truncate">
-        {{ currentTrack.title }}
+      <div v-if="currentTrack" class="col-span-2">
+        <div class="truncate">
+          <Typography is="h5" variant="body" weight="medium">
+            {{ currentTrack.title }}
+          </Typography>
+          <ArtistsLinks
+            v-if="currentTrack.artists"
+            :artists="currentTrack.artists"
+          />
+        </div>
       </div>
 
       <div
@@ -76,6 +84,7 @@ import Spinner from './Spinner.vue'
 import Typography from './Typography.vue'
 import { useAudioControls } from '../composables/audio-controls'
 import { PlayingStatus, usePlayingStore } from '../stores/playing-store'
+import ArtistsLinks from './ArtistsLinks.vue'
 
 const { playingStatus, volume, muted, currentTrack } = storeToRefs(
   usePlayingStore()
