@@ -5,7 +5,7 @@
       @input="onSearchInput"
       @click="onSearchClick"
       v-debounce:500ms="onDebouncedSearch"
-      placeholder="Search for an album..."
+      placeholder="Search for an artist, album or track..."
       type="text"
       class="peer w-full rounded border border-slate-400 bg-slate-100 px-2 py-1 ring-0 focus:border-slate-600 focus:outline-none"
       :class="{
