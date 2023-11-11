@@ -1,13 +1,19 @@
 import type { IAudioMetadata } from 'music-metadata'
 import { filterDefined } from './array'
-import { getArtistsFromString, getArtistsFromTags } from './artists'
 import { getCoverForTracks, toBase64DataString } from './metadata'
+import {
+  ARTIST_TAG_SEPARATOR,
+  GENRE_TAG_SEPARATOR,
+  separateTagValues,
+} from './tag-separator'
 import type { Album, DbAlbum } from '../../types/albums'
 import type { DbTrack, Track } from '../../types/tracks'
 import type { Artist, DbArtist } from '../../types/artist'
 import type { AlbumTracks } from '../../types/album-tracks'
 import type { AlbumArtists } from '../../types/album-artists'
 import type { TrackArtists } from '../../types/track-artists'
+import { DbGenre, Genre } from '../../types/genres'
+import { GenreTracks } from '../../types/genre-tracks'
 
 function extractAlbumCover(album: string, tracks: IAudioMetadata[]) {
   const tracksInAlbum = tracks.filter(track => track.common.album === album)
@@ -28,7 +34,14 @@ export function extractAlbumsFromTracks(tracks: IAudioMetadata[]) {
 }
 
 export function extractArtistsFromTracks(tracks: IAudioMetadata[]) {
-  const artists = tracks.flatMap(getArtistsFromTags)
+  const artists = tracks.flatMap(track =>
+    separateTagValues(
+      ARTIST_TAG_SEPARATOR,
+      track.common.artist,
+      track.common.albumartist,
+      track.common.artists
+    )
+  )
   const artistsWithoutDuplicates = Array.from(new Set(artists))
   return artistsWithoutDuplicates.map<Artist>(artist => ({ name: artist }))
 }
@@ -82,7 +95,9 @@ export function extractAlbumArtists(
           metaItem.common.album === album.title && metaItem.common.albumartist
         )
       })
-      .flatMap(metaItem => getArtistsFromString(metaItem.common.albumartist!))
+      .flatMap(metaItem =>
+        separateTagValues(ARTIST_TAG_SEPARATOR, metaItem.common.albumartist)
+      )
       .map(albumArtist => {
         const artist = artists.find(artist => artist.name === albumArtist)
         if (!artist) {
@@ -108,7 +123,13 @@ export function extractTrackArtists(
   meta: IAudioMetadata[]
 ) {
   return tracks.flatMap((track, index) => {
-    const artistsInTracks = getArtistsFromTags(meta[index])
+    const common = meta[index].common
+    const artistsInTracks = separateTagValues(
+      ARTIST_TAG_SEPARATOR,
+      common.artist,
+      common.albumartist,
+      common.artists
+    )
     const artistIds = artistsInTracks
       .map(artistInTrack => {
         const art = artists.find(artist => artist.name === artistInTrack)
@@ -126,5 +147,39 @@ export function extractTrackArtists(
       artistId,
       trackId: track.id,
     }))
+  })
+}
+
+export function extractGenresFromTracks(metadata: IAudioMetadata[]) {
+  const genres = metadata.flatMap(meta => {
+    return separateTagValues(GENRE_TAG_SEPARATOR, meta.common.genre)
+  })
+  const genresWithoutDuplicates = Array.from(new Set(genres))
+  return genresWithoutDuplicates.map<Genre>(genre => ({ name: genre }))
+}
+
+export function extractGenreTracks(
+  tracks: DbTrack[],
+  genres: DbGenre[],
+  metadata: IAudioMetadata[]
+) {
+  return tracks.flatMap((track, index) => {
+    const common = metadata[index].common
+    const trackGenres = separateTagValues(GENRE_TAG_SEPARATOR, common.genre)
+
+    return trackGenres
+      .map<GenreTracks | undefined>(trackGenre => {
+        const genre = genres.find(g => g.name === trackGenre)
+        if (!genre) {
+          console.warn(`Genre ${trackGenre} not found for track ${track.id}`)
+          return
+        }
+
+        return {
+          genreId: genre.id,
+          trackId: track.id,
+        }
+      })
+      .filter(filterDefined)
   })
 }

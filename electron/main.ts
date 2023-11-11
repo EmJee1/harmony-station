@@ -23,6 +23,8 @@ import {
   extractAlbumsFromTracks,
   extractAlbumTracks,
   extractArtistsFromTracks,
+  extractGenresFromTracks,
+  extractGenreTracks,
   extractTrackArtists,
   extractTracksFromTracks,
 } from './utils/tracks'
@@ -51,6 +53,8 @@ import { addTrackArtists, clearTrackArtists } from './repositories/trackArtists'
 import { DbSettings } from '../types/settings'
 import { getContextMenuForVersion } from './menu/context-menu'
 import { ContextMenuRequest } from '../types/context-menu'
+import { addGenres, clearGenres, getGenres } from './repositories/genres'
+import { addGenreTracks, clearGenreTracks } from './repositories/genreTracks'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -137,10 +141,12 @@ app
       await Promise.all([
         clearAlbumArtists(),
         clearAlbumTracks(),
+        clearGenreTracks(),
+        clearTrackArtists(),
         clearAlbums(),
+        clearGenres(),
         clearArtists(),
         clearTracks(),
-        clearTrackArtists(),
       ])
 
       const files = await scanMusicFilesInFolders(settings.audioDirectories)
@@ -151,10 +157,13 @@ app
       await addAlbums(albumNames)
       const tracks = extractTracksFromTracks(files, metadata)
       await addTracks(tracks)
+      const genres = extractGenresFromTracks(metadata)
+      await addGenres(genres)
 
       const dbAlbums = await getAlbums()
       const dbTracks = await getTracks()
       const dbArtists = await getArtists()
+      const dbGenres = await getGenres()
 
       const albumTracks = extractAlbumTracks(dbAlbums, dbTracks, metadata)
       await addAlbumTracks(albumTracks)
@@ -164,6 +173,9 @@ app
 
       const trackArtists = extractTrackArtists(dbTracks, dbArtists, metadata)
       await addTrackArtists(trackArtists)
+
+      const genreTracks = extractGenreTracks(dbTracks, dbGenres, metadata)
+      await addGenreTracks(genreTracks)
     })
     ipcMain.handle('search', async (_: IpcMainInvokeEvent, query: string) => {
       return {

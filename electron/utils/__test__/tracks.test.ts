@@ -5,12 +5,16 @@ import {
   extractAlbumsFromTracks,
   extractAlbumTracks,
   extractArtistsFromTracks,
+  extractGenresFromTracks,
+  extractGenreTracks,
   extractTrackArtists,
   extractTracksFromTracks,
 } from '../tracks'
 import type { DbAlbum } from '../../../types/albums'
 import type { AlbumTracks } from '../../../types/album-tracks'
 import type { DbTrack } from '../../../types/tracks'
+import type { DbGenre } from '../../../types/genres'
+import type { DbGenreTracks } from '../../../types/genre-tracks'
 
 describe('tracks utils', () => {
   describe('extractArtistsFromTracks', () => {
@@ -156,6 +160,44 @@ describe('tracks utils', () => {
       ]
 
       expect(extractTrackArtists(tracks, artists, meta)).toEqual(expected)
+    })
+  })
+
+  describe('extractGenresFromTracks', () => {
+    test('should return genres in track', () => {
+      const meta = [
+        { common: { genre: ['one; two'] } },
+        { common: { genre: ['one'] } },
+        { common: { genre: ['three'] } },
+      ] as IAudioMetadata[]
+
+      expect(extractGenresFromTracks(meta)).toEqual([
+        { name: 'one' },
+        { name: 'two' },
+        { name: 'three' },
+      ])
+    })
+  })
+
+  describe('extractGenreTracks', () => {
+    test('should return genre-tracks', () => {
+      const meta = [
+        { common: { genre: ['g-1; g-2'] } },
+        { common: { genre: ['g-2'] } },
+      ] as IAudioMetadata[]
+      const tracks = [{ id: 1 }, { id: 2 }] as DbTrack[]
+      const genres = [
+        { id: 1, name: 'g-1' },
+        { id: 2, name: 'g-2' },
+      ] as DbGenre[]
+
+      const expected: DbGenreTracks[] = [
+        { trackId: 1, genreId: 1 },
+        { trackId: 1, genreId: 2 },
+        { trackId: 2, genreId: 2 },
+      ]
+
+      expect(extractGenreTracks(tracks, genres, meta)).toEqual(expected)
     })
   })
 })

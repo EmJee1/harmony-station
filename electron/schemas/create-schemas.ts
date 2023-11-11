@@ -45,6 +45,14 @@ export async function createSchemas() {
     })
   }
 
+  if (!(await tableExists('genres'))) {
+    console.log('Creating table "genres"')
+    await getDatabase().schema.createTable('genres', tableBuilder => {
+      tableBuilder.increments('id')
+      tableBuilder.text('name')
+    })
+  }
+
   if (!(await tableExists('album_artists'))) {
     console.log('Creating table "album_artists"')
     await getDatabase().schema.createTable('album_artists', tableBuilder => {
@@ -60,6 +68,15 @@ export async function createSchemas() {
       tableBuilder.integer('trackId').references('id').inTable('tracks')
       tableBuilder.integer('artistId').references('id').inTable('artists')
       tableBuilder.primary(['trackId', 'artistId'])
+    })
+  }
+
+  if (!(await tableExists('genre_tracks'))) {
+    console.log('Creating table "genre_tracks"')
+    await getDatabase().schema.createTable('genre_tracks', tableBuilder => {
+      tableBuilder.integer('genreId').references('id').inTable('genres')
+      tableBuilder.integer('trackId').references('id').inTable('tracks')
+      tableBuilder.primary(['genreId', 'trackId'])
     })
   }
 
