@@ -50,7 +50,13 @@ import ContextMenu from './ContextMenu.vue'
 import type { DbTrack } from '../../types/tracks'
 import type { ContextMenuRequest } from '../../types/context-menu'
 
-type Column = 'play-track' | 'play-queue-track' | 'artists' | 'title' | 'year'
+type Column =
+  | 'play-track'
+  | 'play-queue-track'
+  | 'artists'
+  | 'title'
+  | 'year'
+  | 'genre'
 
 interface Props {
   isQueue?: boolean
@@ -81,6 +87,7 @@ const columnConfig: Record<Column, ColumnFromTrack | CustomColumn> = {
   artists: { name: 'Artists', type: 'custom' },
   title: { name: 'Title', type: 'from-track', key: 'title' },
   year: { name: 'Year', type: 'from-track', key: 'year' },
+  genre: { name: 'Genre', type: 'from-track', key: 'genre' },
 }
 
 function getContextMenuArgs(track: DbTrack): ContextMenuRequest {

@@ -27,7 +27,7 @@
     <Button @click="onPlayAlbum" class="mt-6">Play album</Button>
     <TrackTable
       :tracks="album.tracks"
-      :columns="['play-track', 'title', 'artists', 'year']"
+      :columns="['play-track', 'title', 'artists', 'genre', 'year']"
       :highlighted-track-id="highlightedTrack"
       class="mt-6"
     />
