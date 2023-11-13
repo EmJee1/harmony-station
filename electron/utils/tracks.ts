@@ -12,8 +12,8 @@ import type { Artist, DbArtist } from '../../types/artist'
 import type { AlbumTracks } from '../../types/album-tracks'
 import type { AlbumArtists } from '../../types/album-artists'
 import type { TrackArtists } from '../../types/track-artists'
-import { DbGenre, Genre } from '../../types/genres'
-import { GenreTracks } from '../../types/genre-tracks'
+import type { DbGenre, Genre } from '../../types/genres'
+import type { GenreTracks } from '../../types/genre-tracks'
 
 function extractAlbumCover(album: string, tracks: IAudioMetadata[]) {
   const tracksInAlbum = tracks.filter(track => track.common.album === album)
@@ -54,7 +54,6 @@ export function extractTracksFromTracks(
     return {
       path: paths[index],
       title: track.common.title ?? 'Unknown title',
-      genre: track.common.genre?.length ? track.common.genre.at(0) : undefined,
       year: track.common.year,
     }
   })
