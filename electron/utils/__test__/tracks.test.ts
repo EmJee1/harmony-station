@@ -61,11 +61,11 @@ describe('tracks utils', () => {
       [
         ['file-1', 'file-2'],
         [
-          { common: { title: 't-a', year: 2020, genre: ['g-a', 'g-b'] } },
-          { common: { title: 't-b', genre: [] } },
+          { common: { title: 't-a', year: 2020 } },
+          { common: { title: 't-b' } },
         ],
         [
-          { path: 'file-1', title: 't-a', genre: 'g-a', year: 2020 },
+          { path: 'file-1', title: 't-a', year: 2020 },
           { path: 'file-2', title: 't-b' },
         ],
       ],
