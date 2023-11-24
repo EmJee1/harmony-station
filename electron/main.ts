@@ -55,6 +55,11 @@ import { getContextMenuForVersion } from './menu/context-menu'
 import { ContextMenuRequest } from '../types/context-menu'
 import { addGenres, clearGenres, getGenres } from './repositories/genres'
 import { addGenreTracks, clearGenreTracks } from './repositories/genreTracks'
+import { CheckHealthResult, HealthError } from '../types/health'
+import {
+  directoryDoesNotExistHealthError,
+  directoryExists,
+} from './utils/health'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -176,6 +181,29 @@ app
 
       const genreTracks = extractGenreTracks(dbTracks, dbGenres, metadata)
       await addGenreTracks(genreTracks)
+    })
+    ipcMain.handle('check-health', async (): Promise<CheckHealthResult> => {
+      // Checks if the application is in a state to function optimally
+      const settings = await getSettings()
+      const healthErrors: HealthError[] = []
+
+      for (const audioDirectory of settings.audioDirectories) {
+        const exists = await directoryExists(audioDirectory)
+        if (!exists) {
+          healthErrors.push(directoryDoesNotExistHealthError(audioDirectory))
+        }
+      }
+
+      if (!healthErrors.length) {
+        return {
+          healthy: true,
+        }
+      }
+
+      return {
+        healthy: false,
+        errors: healthErrors,
+      }
     })
     ipcMain.handle('search', async (_: IpcMainInvokeEvent, query: string) => {
       return {

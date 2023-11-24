@@ -6,7 +6,8 @@ import type {
   ContextMenuRequest,
   ContextMenuResponse,
 } from '../types/context-menu'
-import { DbTrack } from '../types/tracks'
+import type { DbTrack } from '../types/tracks'
+import type { CheckHealthResult } from '../types/health'
 
 export interface IElectronAPI {
   getSettings: () => Promise<DbSettings>
@@ -15,6 +16,7 @@ export interface IElectronAPI {
   getAlbum: (id: number) => Promise<Required<DbAlbum>>
   getArtist: (id: number) => Promise<Required<DbArtist>>
   scanTracks: () => Promise<void>
+  checkHealth: () => Promise<CheckHealthResult>
   search: (
     query: string
   ) => Promise<{ albums: DbAlbum[]; artists: DbArtist[]; tracks: DbTrack[] }>

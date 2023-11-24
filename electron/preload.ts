@@ -18,6 +18,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getAlbum: (id: number) => ipcRenderer.invoke('get:album', id),
   getArtist: (id: number) => ipcRenderer.invoke('get:artist', id),
   scanTracks: () => ipcRenderer.invoke('scan-tracks'),
+  checkHealth: () => ipcRenderer.invoke('check-health'),
   search: (query: string) => ipcRenderer.invoke('search', query),
   selectDirectory: () => ipcRenderer.invoke('select-directory'),
   spawnContextMenu: (args: ContextMenuRequest) =>
