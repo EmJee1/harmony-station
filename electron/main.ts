@@ -55,7 +55,7 @@ import { getContextMenuForVersion } from './menu/context-menu'
 import { ContextMenuRequest } from '../types/context-menu'
 import { addGenres, clearGenres, getGenres } from './repositories/genres'
 import { addGenreTracks, clearGenreTracks } from './repositories/genreTracks'
-import { CheckHealthResult, HealthError } from '../types/health'
+import type { AnyHealthError, CheckHealthResult } from '../types/health'
 import {
   directoryDoesNotExistHealthError,
   directoryExists,
@@ -185,7 +185,7 @@ app
     ipcMain.handle('check-health', async (): Promise<CheckHealthResult> => {
       // Checks if the application is in a state to function optimally
       const settings = await getSettings()
-      const healthErrors: HealthError[] = []
+      const healthErrors: AnyHealthError[] = []
 
       for (const audioDirectory of settings.audioDirectories) {
         const exists = await directoryExists(audioDirectory)
