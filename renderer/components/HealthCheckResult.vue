@@ -1,7 +1,7 @@
 <template>
   <dialog ref="dialogRef" class="w-full max-w-4xl rounded">
-    <div class="space-y-6 p-6">
-      <div class="flex items-center justify-between">
+    <div class="p-6">
+      <div class="flex items-center justify-between pb-4">
         <Typography is="h4" variant="heading-3" weight="bold">
           {{ titleText }}
         </Typography>
@@ -10,7 +10,7 @@
         </ButtonIcon>
       </div>
       <hr />
-      <div v-if="healthCheck && !healthCheck.healthy" class="space-y-2">
+      <div v-if="healthCheck && !healthCheck.healthy" class="space-y-2 pt-6">
         <Alert
           v-for="error in healthCheck.errors"
           :key="error.id"
@@ -21,7 +21,7 @@
             <Typography is="span" variant="body" weight="light">
               {{ error.meta.path }}
             </Typography>
-            directory.
+            directory. Are you sure the device is connected and accessible?
           </template>
         </Alert>
       </div>
