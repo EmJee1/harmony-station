@@ -16,13 +16,10 @@
           :key="error.id"
           :severity="error.severity"
         >
-          <template v-if="error.code === 'dir-not-visible'">
-            We could not read the
-            <Typography is="span" variant="body" weight="light">
-              {{ error.meta.path }}
-            </Typography>
-            directory. Are you sure the device is connected and accessible?
-          </template>
+          <HealthCheckDirNotVisible
+            v-if="error.code === 'dir-not-visible'"
+            :error="error"
+          />
         </Alert>
       </div>
     </div>
@@ -34,6 +31,7 @@ import XMarkIcon from '@heroicons/vue/24/outline/XMarkIcon'
 import { computed, onMounted, ref } from 'vue'
 import Alert from './Alert.vue'
 import ButtonIcon from './ButtonIcon.vue'
+import HealthCheckDirNotVisible from './health-check/HealthCheckDirNotVisible.vue'
 import Typography from './Typography.vue'
 import type { CheckHealthResult } from '../../types/health'
 
