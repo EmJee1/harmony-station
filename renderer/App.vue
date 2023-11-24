@@ -22,6 +22,7 @@
       <RouterView />
     </Container>
     <CurrentlyPlayingBar />
+    <HealthCheckResult trigger="immediately" />
     <FullscreenLoader v-if="fullscreenLoaderActive" />
     <ToastProvider />
   </div>
@@ -38,6 +39,7 @@ import ButtonIcon from './components/ButtonIcon.vue'
 import Container from './components/Container.vue'
 import CurrentlyPlayingBar from './components/CurrentlyPlayingBar.vue'
 import FullscreenLoader from './components/FullscreenLoader.vue'
+import HealthCheckResult from './components/HealthCheckResult.vue'
 import Search from './components/Search.vue'
 import ToastProvider from './components/ToastProvider.vue'
 import { useContextMenuResponses } from './composables/context-menu-responses'
@@ -51,6 +53,6 @@ const router = useRouter()
 const route = useRoute()
 
 onMounted(async () => {
-  await Promise.all([fetchSettings()])
+  await fetchSettings()
 })
 </script>

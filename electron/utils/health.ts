@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises'
-import type { HealthError } from '../../types/health'
+import crypto from 'node:crypto'
+import type { DirNotVisibleHealthError } from '../../types/health'
 
 export async function directoryExists(path: string) {
   try {
@@ -10,9 +11,15 @@ export async function directoryExists(path: string) {
   }
 }
 
-export function directoryDoesNotExistHealthError(path: string): HealthError {
+export function directoryDoesNotExistHealthError(
+  path: string
+): DirNotVisibleHealthError {
   return {
-    text: `The directory "${path}" could not be opened`,
+    id: crypto.randomUUID(),
     code: 'dir-not-visible',
+    severity: 'error',
+    meta: {
+      path,
+    },
   }
 }

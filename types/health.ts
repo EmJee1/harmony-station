@@ -1,7 +1,18 @@
-export interface HealthError {
-  text: string
-  code: 'dir-not-visible'
+interface HealthErrorBase {
+  id: string
+  code: string
+  severity: 'warning' | 'error'
+  meta: object
 }
+
+export interface DirNotVisibleHealthError extends HealthErrorBase {
+  code: 'dir-not-visible'
+  meta: {
+    path: string
+  }
+}
+
+export type AnyHealthError = DirNotVisibleHealthError
 
 export interface CheckHealthHealthyResult {
   healthy: true
@@ -9,7 +20,7 @@ export interface CheckHealthHealthyResult {
 
 export interface CheckHealthUnhealthyResult {
   healthy: false
-  errors: HealthError[]
+  errors: AnyHealthError[]
 }
 
 export type CheckHealthResult =
