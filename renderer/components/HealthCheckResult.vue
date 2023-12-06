@@ -19,6 +19,7 @@
           <HealthCheckDirNotVisible
             v-if="error.code === 'dir-not-visible'"
             :error="error"
+            @close="closeDialog"
           />
         </Alert>
       </div>
