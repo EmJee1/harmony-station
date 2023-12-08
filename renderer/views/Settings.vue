@@ -36,9 +36,9 @@ import TrashIcon from '@heroicons/vue/24/outline/TrashIcon'
 import { storeToRefs } from 'pinia'
 import Button from '../components/Button.vue'
 import ButtonIcon from '../components/ButtonIcon.vue'
+import SettingsSection from '../components/SettingsSection.vue'
 import Typography from '../components/Typography.vue'
 import { useSettingsStore } from '../stores/settings-store'
-import SettingsSection from '../components/SettingsSection.vue'
 import { useFullscreenLoaderStore } from '../stores/fullscreen-loader-store'
 
 const { registerFullscreenLoader, unregisterFullscreenLoader } =
@@ -46,10 +46,12 @@ const { registerFullscreenLoader, unregisterFullscreenLoader } =
 const settingsStore = useSettingsStore()
 const { settings } = storeToRefs(settingsStore)
 
+const SCAN_TRACKS_LOADER = Symbol()
+
 async function onScan() {
-  registerFullscreenLoader('Scanning tracks...')
+  registerFullscreenLoader(SCAN_TRACKS_LOADER, 'Scanning tracks...')
   await window.electronAPI.scanTracks()
-  unregisterFullscreenLoader()
+  unregisterFullscreenLoader(SCAN_TRACKS_LOADER)
 }
 
 async function onAddDirectory() {

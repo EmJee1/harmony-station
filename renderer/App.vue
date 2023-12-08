@@ -22,8 +22,8 @@
       <RouterView />
     </Container>
     <CurrentlyPlayingBar />
-    <HealthCheckResult trigger="immediately" />
-    <FullscreenLoader v-if="fullscreenLoaderActive" />
+    <HealthCheckResult trigger="on-error" />
+    <FullscreenLoader v-if="fullscreenLoaderRegistrations.length" />
     <ToastProvider />
   </div>
 </template>
@@ -48,7 +48,9 @@ import { useFullscreenLoaderStore } from './stores/fullscreen-loader-store'
 
 useContextMenuResponses()
 const { fetchSettings } = useSettingsStore()
-const { fullscreenLoaderActive } = storeToRefs(useFullscreenLoaderStore())
+const { fullscreenLoaderRegistrations } = storeToRefs(
+  useFullscreenLoaderStore()
+)
 const router = useRouter()
 const route = useRoute()
 
