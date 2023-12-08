@@ -1,6 +1,7 @@
 <template>
   <Typography is="h1" variant="heading-1">Settings</Typography>
-  <SettingsSection title="Your local library">
+  <NoResults v-if="!settings" title="Failed to fetch settings" />
+  <SettingsSection v-else title="Your local library">
     <div v-if="settings.audioDirectories.length" class="space-y-2">
       <div
         v-for="audioDir in settings.audioDirectories"
@@ -38,8 +39,9 @@ import Button from '../components/Button.vue'
 import ButtonIcon from '../components/ButtonIcon.vue'
 import SettingsSection from '../components/SettingsSection.vue'
 import Typography from '../components/Typography.vue'
-import { useSettingsStore } from '../stores/settings-store'
 import { useFullscreenLoaderStore } from '../stores/fullscreen-loader-store'
+import { useSettingsStore } from '../stores/settings-store'
+import NoResults from '../components/NoResults.vue'
 
 const { registerFullscreenLoader, unregisterFullscreenLoader } =
   useFullscreenLoaderStore()
@@ -55,6 +57,10 @@ async function onScan() {
 }
 
 async function onAddDirectory() {
+  if (!settings.value) {
+    return
+  }
+
   const result = await window.electronAPI.selectDirectory()
   if (!result.canceled) {
     await settingsStore.updateSettings({
@@ -67,6 +73,10 @@ async function onAddDirectory() {
 }
 
 async function onRemoveDirectory(directory: string) {
+  if (!settings.value) {
+    return
+  }
+
   await settingsStore.updateSettings({
     audioDirectories: settings.value.audioDirectories.filter(
       dir => dir !== directory
