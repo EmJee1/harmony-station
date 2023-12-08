@@ -15,7 +15,7 @@
         class="w-8"
       />
     </div>
-    <Typography is="p" variant="body">
+    <Typography is="p" variant="body" class="w-full max-w-full break-words">
       {{ toast.message }}
     </Typography>
   </div>
