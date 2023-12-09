@@ -1,7 +1,7 @@
 <template>
   <div class="mt-6 space-y-4">
     <Typography is="h2" variant="heading-3" weight="medium">
-      Your local library
+      {{ title }}
     </Typography>
     <slot />
   </div>
