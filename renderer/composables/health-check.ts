@@ -33,9 +33,10 @@ export function useHealthCheck() {
     }
   }
 
-  async function checkHealth() {
+  async function checkHealth(showHealthyToast?: boolean) {
     try {
       const healthCheckResult = await window.electronAPI.checkHealth()
+
       if (!healthCheckResult.healthy) {
         for (const error of healthCheckResult.errors) {
           registerToast({
@@ -43,6 +44,15 @@ export function useHealthCheck() {
             message: getMessageForHealthError(error),
           })
         }
+
+        return
+      }
+
+      if (showHealthyToast) {
+        registerToast({
+          variant: 'success',
+          message: 'No health problems found',
+        })
       }
     } catch (err) {
       registerToast({

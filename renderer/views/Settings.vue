@@ -32,7 +32,7 @@
       </div>
     </SettingsSection>
     <SettingsSection title="Health check">
-      <Button @click="checkHealth">Check health</Button>
+      <Button @click="checkHealth(true)">Check health</Button>
     </SettingsSection>
   </template>
 </template>
