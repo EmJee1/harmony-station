@@ -14,14 +14,12 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import Card from '../components/Card.vue'
 import Typography from '../components/Typography.vue'
-import type { DbAlbum } from '../../types/albums'
+import { useElectronRequest } from '../composables/electron-request'
 
-const albums = ref<DbAlbum[]>([])
+const { execute, response: albums } = useElectronRequest('getAlbums')
 
-onMounted(async () => {
-  albums.value = await window.electronAPI.getAlbums(10)
-})
+onMounted(() => execute(10))
 </script>

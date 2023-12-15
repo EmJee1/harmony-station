@@ -36,10 +36,7 @@ import { useElectronRequest } from '../composables/electron-request'
 
 const route = useRoute()
 
-const { execute, response: artist } = useElectronRequest(
-  'getArtist',
-  'Loading artist'
-)
+const { execute, response: artist } = useElectronRequest('getArtist')
 
 watch(
   () => route.params.id,

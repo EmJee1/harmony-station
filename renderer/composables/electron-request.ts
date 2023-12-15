@@ -17,6 +17,16 @@ type ElectronAPIMethodReturnType<T extends ElectronAPIMethod> = Awaited<
   ReturnType<(typeof window.electronAPI)[T]>
 >
 
+const loaderMessages: Partial<Record<ElectronAPIMethod, string>> = {
+  getSettings: 'Loading settings',
+  updateSettings: 'Updating settings',
+  getAlbums: 'Loading albums',
+  getAlbum: 'Loading album',
+  getArtist: 'Loading artist',
+  scanTracks: 'Scanning tracks',
+  selectDirectory: 'Selecting audio directory',
+}
+
 /**
  * Composable that provides a helpful wrapper around asynchronous actions.
  * Returns the awaitable function; this is where you should define your asynchronous code.
@@ -30,10 +40,7 @@ type ElectronAPIMethodReturnType<T extends ElectronAPIMethod> = Awaited<
  *   await fetch('https://some-resource.com')
  * })
  */
-export function useElectronRequest<T extends ElectronAPIMethod>(
-  method: T,
-  loaderMessage?: string
-) {
+export function useElectronRequest<T extends ElectronAPIMethod>(method: T) {
   const { registerFullscreenLoader, unregisterFullscreenLoader } =
     useFullscreenLoaderStore()
 
@@ -43,11 +50,11 @@ export function useElectronRequest<T extends ElectronAPIMethod>(
 
   async function execute(...methodParams: ElectronAPIMethodParams<T>) {
     const LOADER_ID = Symbol()
-    registerFullscreenLoader(LOADER_ID, loaderMessage)
+    registerFullscreenLoader(LOADER_ID, loaderMessages[method])
 
     try {
       response.value = (await window.electronAPI[method](
-        // @ts-expect-error TS cannot infer the parameter type correctly
+        // @ts-expect-error TS cannot infer the parameter type correctly (inferred as never)
         ...methodParams
       )) as ElectronAPIMethodReturnType<T>
     } catch (err) {
