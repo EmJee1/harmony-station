@@ -1,6 +1,5 @@
 <template>
-  <p v-if="!artist">Loading...</p>
-  <template v-else>
+  <template v-if="artist">
     <Typography is="h1" variant="heading-1">
       {{ artist.name }}
     </Typography>
@@ -28,22 +27,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Typography from '../components/Typography.vue'
-import type { DbArtist } from '../../types/artist'
 import TrackTable from '../components/TrackTable.vue'
 import Card from '../components/Card.vue'
+import { useElectronRequest } from '../composables/electron-request'
 
 const route = useRoute()
 
-const artist = ref<Required<DbArtist>>()
+const { execute, response: artist } = useElectronRequest(
+  'getArtist',
+  'Loading artist'
+)
 
 watch(
   () => route.params.id,
-  async artistId => {
-    artist.value = await window.electronAPI.getArtist(Number(artistId))
-  },
+  async artistId => await execute(Number(artistId)),
   { immediate: true }
 )
 </script>
