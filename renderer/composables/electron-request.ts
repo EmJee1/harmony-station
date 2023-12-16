@@ -38,17 +38,11 @@ interface UseElectronRequestOptions {
 }
 
 /**
- * Composable that provides a helpful wrapper around asynchronous actions.
- * Returns the awaitable function; this is where you should define your asynchronous code.
- * The success boolean becomes true when a single awaitable function has completed without throwing.
+ * Composable that provides a helpful wrapper around calls to Electron.
+ * Returns the execute function; this is where you can call the specified Electron method.
  * @example
- * const { awaitable, loading, error, success } = useAwaitable()
- * const onSubmit = awaitable(async () => {
- *   if (name.value === '') {
- *     throw new Error('Name should not be empty')
- *   }
- *   await fetch('https://some-resource.com')
- * })
+ * const { execute, response } = useElectronRequest('getArtist')
+ * onMounted(() => execute(route.params.id))
  */
 export function useElectronRequest<T extends ElectronAPIMethod>(
   method: T,
@@ -90,6 +84,7 @@ export function useElectronRequest<T extends ElectronAPIMethod>(
 
   return {
     execute,
+    loading,
     response,
     success,
     error,
