@@ -1,5 +1,5 @@
 import { describe, test, expect } from '@jest/globals'
-import { omit, pick } from '../object'
+import { omit, pick, renameKey } from '../object'
 
 describe('object utils', () => {
   describe('omit', () => {
@@ -70,6 +70,42 @@ describe('object utils', () => {
       }
 
       const result = pick(input, ['two', 'three'])
+
+      expect(result).toEqual(expected)
+    })
+  })
+
+  describe('renameKey', () => {
+    test('should rename a single key', () => {
+      const input = {
+        one: 1,
+        two: 3,
+      }
+
+      const expected = {
+        one: 1,
+        three: 3,
+      }
+
+      const result = renameKey(input, ['two', 'three'])
+
+      expect(result).toEqual(expected)
+    })
+
+    test('should rename multiple keys', () => {
+      const input = {
+        one: 1,
+        two: 5,
+        three: 6,
+      }
+
+      const expected = {
+        one: 1,
+        five: 5,
+        six: 6,
+      }
+
+      const result = renameKey(input, ['two', 'five'], ['three', 'six'])
 
       expect(result).toEqual(expected)
     })

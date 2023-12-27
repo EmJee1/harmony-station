@@ -39,3 +39,20 @@ export function pick<T extends object, U extends keyof T>(
 
   return result
 }
+
+export function renameKey<
+  TData extends object,
+  TOld extends keyof TData,
+  TNew extends string,
+>(obj: TData, ...rename: [TOld, TNew][]) {
+  const result = structuredClone(obj)
+
+  for (const [oldKey, newKey] of rename) {
+    // TODO: fix this
+    // @ts-expect-error indexing error
+    result[newKey] = result[oldKey]
+    delete result[oldKey]
+  }
+
+  return result as Omit<TData, TOld> & Record<TNew, TData[TOld]>
+}
