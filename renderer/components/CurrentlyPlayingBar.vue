@@ -1,6 +1,6 @@
 <template>
   <div class="fixed bottom-0 left-0 h-16 w-screen bg-slate-100">
-    <Container class="grid h-full grid-cols-8 items-center gap-8">
+    <Container class="grid h-full grid-cols-10 items-center gap-8">
       <div v-if="currentTrack" class="col-span-2">
         <div class="truncate">
           <Typography is="h5" variant="body" weight="medium">
@@ -49,7 +49,10 @@
         <Seeker v-else class="w-full" />
       </div>
 
-      <div class="col-span-2 flex items-center gap-4">
+      <div class="col-span-4 flex items-center justify-end gap-4">
+        <ButtonIcon class="h-6 w-10" @click="cyclePlaybackRate">
+          <span class="text-md">{{ playbackRate }}x</span>
+        </ButtonIcon>
         <ButtonIcon is="RouterLink" to="/queue">
           <QueueListIcon />
         </ButtonIcon>
@@ -86,11 +89,11 @@ import { useAudioControls } from '../composables/audio-controls'
 import { PlayingStatus, usePlayingStore } from '../stores/playing-store'
 import ArtistsLinks from './ArtistsLinks.vue'
 
-const { playingStatus, volume, muted, currentTrack } = storeToRefs(
-  usePlayingStore()
-)
+const { playingStatus, volume, muted, currentTrack, playbackRate } =
+  storeToRefs(usePlayingStore())
 
-const { toggleMute, setVolume, play, pause, skip, canSkip } = useAudioControls()
+const { toggleMute, setVolume, play, pause, skip, cyclePlaybackRate, canSkip } =
+  useAudioControls()
 
 function onMainActionClick(playingStatus: PlayingStatus) {
   switch (playingStatus) {

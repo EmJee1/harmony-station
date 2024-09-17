@@ -20,6 +20,7 @@ export const usePlayingStore = defineStore('playing', () => {
   const currentTime = ref(0)
   const volume = ref(1)
   const muted = ref(false)
+  const playbackRate = ref(1)
   const audioElement = ref(new Audio())
 
   // Error during the loading of the audio
@@ -55,6 +56,10 @@ export const usePlayingStore = defineStore('playing', () => {
     volume.value = audioElement.value.volume
   }
 
+  audioElement.value.onratechange = () => {
+    playbackRate.value = audioElement.value.playbackRate
+  }
+
   audioElement.value.onended = () => {
     skip()
   }
@@ -80,5 +85,6 @@ export const usePlayingStore = defineStore('playing', () => {
     currentTime,
     volume,
     muted,
+    playbackRate,
   }
 })

@@ -7,7 +7,8 @@ import type { DbTrack } from '../../types/tracks'
 
 export function useAudioControls() {
   const playingStore = usePlayingStore()
-  const { audioElement, muted, currentTrack } = storeToRefs(playingStore)
+  const { audioElement, muted, currentTrack, playbackRate } =
+    storeToRefs(playingStore)
   const { queue } = storeToRefs(useQueueStore())
   const { registerToast } = useToastStore()
 
@@ -26,6 +27,13 @@ export function useAudioControls() {
 
   function pause() {
     audioElement.value.pause()
+  }
+
+  function cyclePlaybackRate() {
+    const allowedValues = [0.8, 1, 1.25, 1.5]
+    const currentIndex = allowedValues.indexOf(playbackRate.value)
+    audioElement.value.playbackRate =
+      allowedValues[currentIndex + 1] ?? allowedValues[0]
   }
 
   function skip() {
@@ -97,6 +105,7 @@ export function useAudioControls() {
     addToQueue,
     clearQueue,
     setCurrentTime,
+    cyclePlaybackRate,
     canSkip,
   }
 }
