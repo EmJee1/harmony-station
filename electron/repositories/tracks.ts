@@ -1,6 +1,6 @@
 import type { DbTrack, Track } from '../../types/tracks'
 import { getDatabase, getDrizzle } from './database'
-import { tracks } from '../schemas/schemas'
+import { tracks } from '../schemas'
 
 export async function getTracks() {
   return getDrizzle().query.tracks.findMany()

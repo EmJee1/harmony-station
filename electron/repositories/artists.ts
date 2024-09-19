@@ -1,64 +1,55 @@
-import { getDatabase } from './database'
-import type { Artist } from '../../types/artist'
-import type { DbTrack } from '../../types/tracks'
-import type { DbAlbum } from '../../types/albums'
+import { eq } from 'drizzle-orm'
+import { getDatabase, getDrizzle } from './database'
+import type { Artist, DbArtist } from '../../types/artist'
+import { artists } from '../schemas'
 
 export async function getArtist(id: number) {
-  return getDatabase()('artists').where({ id }).first()
+  return getDrizzle().query.artists.findFirst({
+    where: eq(artists.id, id),
+  })
 }
 
-export async function getTracksByArtist(id: number): Promise<DbTrack[]> {
-  const result: (DbTrack & { artistName: string; artistId: number })[] =
-    await getDatabase()('track_artists')
-      .innerJoin('tracks', 'tracks.id', 'track_artists.trackId')
-      .innerJoin('artists', 'artists.id', 'track_artists.artistId')
-      .whereIn('trackId', builder => {
-        void builder
-          .select('trackId')
-          .from('track_artists')
-          .where('artistId', id)
-      })
-      .select('tracks.*', {
-        artistId: 'artists.id',
-        artistName: 'artists.name',
-      })
+export async function getFullArtist(id: number): Promise<DbArtist> {
+  const result = await getDrizzle().query.artists.findFirst({
+    where: eq(artists.id, id),
+    with: {
+      tracksToArtists: {
+        with: {
+          track: true,
+        },
+      },
+      albumsToArtists: {
+        with: {
+          album: true,
+        },
+      },
+    },
+  })
 
-  return result.reduce<DbTrack[]>((acc, currentValue) => {
-    const { artistName, artistId, ...rest } = currentValue
-    let currentIndex = acc.findIndex(track => track.id === rest.id)
-    if (currentIndex === -1) {
-      currentIndex = acc.push({ ...rest, artists: [] }) - 1
-    }
+  if (!result) {
+    return null
+  }
 
-    acc[currentIndex].artists!.push({
-      name: artistName,
-      id: artistId,
-    })
-
-    return acc
-  }, [])
+  return {
+    id: result.id,
+    name: result.name,
+    tracks: result.tracksToArtists.map(ta => ta.track),
+    albums: result.albumsToArtists.map(aa => aa.album),
+  }
 }
 
-export async function getAlbumsByArtist(id: number): Promise<DbAlbum[]> {
-  return getDatabase()('album_artists')
-    .innerJoin('albums', 'albums.id', 'album_artists.albumId')
-    .select('albums.*')
-    .where('artistId', id)
-}
-
-export async function getArtists() {
-  return getDatabase()('artists')
+export function getArtists() {
+  return getDrizzle().query.artists.findMany()
 }
 
 export async function searchArtists(query: string, limit = 10) {
   return getDatabase()('artists').whereLike('name', `%${query}%`).limit(limit)
 }
 
-export async function addArtists(artists: Artist[]) {
-  // https://knexjs.org/guide/utility.html#batchinsert
-  return getDatabase().batchInsert('artists', artists, 500)
+export async function addArtists(artistsToInsert: Artist[]) {
+  await getDrizzle().insert(artists).values(artistsToInsert)
 }
 
 export async function clearArtists() {
-  return getDatabase()('artists').delete()
+  await getDrizzle().delete(artists)
 }

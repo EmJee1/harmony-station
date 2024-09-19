@@ -1,14 +1,13 @@
+import { eq } from 'drizzle-orm'
 import { getDatabase, getDrizzle } from './database'
 import type { Album, DbAlbum } from '../../types/albums'
 import type { DbTrack } from '../../types/tracks'
 import type { DbArtist } from '../../types/artist'
-import { albums } from '../schemas/schemas'
+import { albums } from '../schemas'
 
 export async function getAlbum(id: number) {
   return getDrizzle().query.albums.findFirst({
-    where: {
-      id,
-    },
+    where: eq(albums.id, id),
   })
 }
 

@@ -31,10 +31,8 @@ import {
 import {
   addArtists,
   clearArtists,
-  getAlbumsByArtist,
-  getArtist,
   getArtists,
-  getTracksByArtist,
+  getFullArtist,
   searchArtists,
 } from './repositories/artists'
 import {
@@ -118,12 +116,9 @@ app
         return updateSettings(update)
       }
     )
-    ipcMain.handle(
-      'get:albums',
-      async (_: IpcMainInvokeEvent, limit: number) => {
-        return await getAlbums(limit)
-      }
-    )
+    ipcMain.handle('get:albums', (_: IpcMainInvokeEvent, limit: number) => {
+      return getAlbums(limit)
+    })
     ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => {
       const album = await getAlbum(id)
       if (!album) {
@@ -134,15 +129,8 @@ app
       album.albumArtists = await getAlbumArtistsInAlbum(id)
       return album
     })
-    ipcMain.handle('get:artist', async (_: IpcMainInvokeEvent, id: number) => {
-      const artist = await getArtist(id)
-      if (!artist) {
-        return null
-      }
-
-      artist.tracks = await getTracksByArtist(id)
-      artist.albums = await getAlbumsByArtist(id)
-      return artist
+    ipcMain.handle('get:artist', (_: IpcMainInvokeEvent, id: number) => {
+      return getFullArtist(id)
     })
     ipcMain.handle('scan-tracks', async () => {
       const settings = await getSettings()

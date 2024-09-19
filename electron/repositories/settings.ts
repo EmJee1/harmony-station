@@ -5,7 +5,7 @@ import {
   mapDbSettingsPartialToSettingsTable,
   mapSettingsTableToDbSettings,
 } from '../utils/settings'
-import { settings } from '../schemas/schemas'
+import { settings } from '../schemas'
 
 const defaultSettings: SettingsTable = {
   id: 1,
