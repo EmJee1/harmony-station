@@ -1,4 +1,4 @@
-import { getDatabase } from './database'
+import { getDatabase, getDrizzle } from './database'
 import type { Album, DbAlbum } from '../../types/albums'
 import type { DbTrack } from '../../types/tracks'
 import type { DbArtist } from '../../types/artist'
@@ -51,10 +51,12 @@ export async function searchAlbums(
 
 export async function getAlbums(limit?: number) {
   if (limit) {
-    return getDatabase()('albums').limit(limit)
+    return getDrizzle().query.albums.findMany({
+      limit,
+    })
   }
 
-  return getDatabase()('albums')
+  return getDrizzle().query.albums.findMany()
 }
 
 export async function addAlbums(albums: Album[]) {

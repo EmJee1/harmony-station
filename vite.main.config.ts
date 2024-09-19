@@ -9,7 +9,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-      external: ['knex', 'sqlite3'],
+      external: ['knex', 'sqlite3', 'better-sqlite3', 'drizzle-orm'],
     },
   },
 })

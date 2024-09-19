@@ -118,9 +118,12 @@ app
         return updateSettings(update)
       }
     )
-    ipcMain.handle('get:albums', (_: IpcMainInvokeEvent, limit: number) => {
-      return getAlbums(limit)
-    })
+    ipcMain.handle(
+      'get:albums',
+      async (_: IpcMainInvokeEvent, limit: number) => {
+        return await getAlbums(limit)
+      }
+    )
     ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => {
       const album = await getAlbum(id)
       if (!album) {

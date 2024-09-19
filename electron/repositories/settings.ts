@@ -1,9 +1,11 @@
-import { getDatabase } from './database'
+import { eq } from 'drizzle-orm'
 import type { DbSettings, Settings, SettingsTable } from '../../types/settings'
+import { getDrizzle } from './database'
 import {
   mapDbSettingsPartialToSettingsTable,
   mapSettingsTableToDbSettings,
 } from '../utils/settings'
+import { settings } from '../schemas/schemas'
 
 const defaultSettings: SettingsTable = {
   id: 1,
@@ -11,7 +13,7 @@ const defaultSettings: SettingsTable = {
 }
 
 export async function getSettings(): Promise<Settings> {
-  let settings = await getDatabase()('settings').first()
+  let settings = await getDrizzle().query.settings.findFirst()
   if (!settings) {
     console.log('No settings found, creating default settings')
     await setDefaultSettings()
@@ -22,12 +24,14 @@ export async function getSettings(): Promise<Settings> {
 }
 
 export async function setDefaultSettings() {
-  await getDatabase()('settings').insert(defaultSettings)
+  await getDrizzle().insert(settings).values(defaultSettings)
 }
 
 export async function updateSettings(update: Partial<DbSettings>) {
   const settingsTable = mapDbSettingsPartialToSettingsTable(update)
-  await getDatabase()('settings')
-    .where({ id: defaultSettings.id })
-    .update(settingsTable)
+
+  await getDrizzle()
+    .update(settings)
+    .set(settingsTable)
+    .where(eq(settings.id, defaultSettings.id))
 }
