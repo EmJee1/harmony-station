@@ -2,9 +2,14 @@ import { getDatabase, getDrizzle } from './database'
 import type { Album, DbAlbum } from '../../types/albums'
 import type { DbTrack } from '../../types/tracks'
 import type { DbArtist } from '../../types/artist'
+import { albums } from '../schemas/schemas'
 
 export async function getAlbum(id: number) {
-  return getDatabase()('albums').where({ id }).first()
+  return getDrizzle().query.albums.findFirst({
+    where: {
+      id,
+    },
+  })
 }
 
 export async function getTracksInAlbum(id: number): Promise<DbTrack[]> {
@@ -50,20 +55,15 @@ export async function searchAlbums(
 }
 
 export async function getAlbums(limit?: number) {
-  if (limit) {
-    return getDrizzle().query.albums.findMany({
-      limit,
-    })
-  }
-
-  return getDrizzle().query.albums.findMany()
+  return getDrizzle().query.albums.findMany({
+    limit,
+  })
 }
 
-export async function addAlbums(albums: Album[]) {
-  // https://knexjs.org/guide/utility.html#batchinsert
-  return getDatabase().batchInsert('albums', albums, 500)
+export async function addAlbums(albumsToInsert: Album[]) {
+  await getDrizzle().insert(albums).values(albumsToInsert)
 }
 
 export async function clearAlbums() {
-  return getDatabase()('albums').delete()
+  await getDrizzle().delete(albums)
 }

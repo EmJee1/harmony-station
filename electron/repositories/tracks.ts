@@ -1,17 +1,17 @@
 import type { DbTrack, Track } from '../../types/tracks'
-import { getDatabase } from './database'
+import { getDatabase, getDrizzle } from './database'
+import { tracks } from '../schemas/schemas'
 
 export async function getTracks() {
-  return getDatabase()('tracks')
+  return getDrizzle().query.tracks.findMany()
 }
 
-export async function addTracks(tracks: Track[]) {
-  // https://knexjs.org/guide/utility.html#batchinsert
-  return getDatabase().batchInsert('tracks', tracks, 500)
+export async function addTracks(tracksToInsert: Track[]) {
+  await getDrizzle().insert(tracks).values(tracksToInsert)
 }
 
 export async function clearTracks() {
-  return getDatabase()('tracks').delete()
+  await getDrizzle().delete(tracks)
 }
 
 export async function searchTracks(
