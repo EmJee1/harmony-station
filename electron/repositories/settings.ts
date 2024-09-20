@@ -5,7 +5,7 @@ import {
   mapDbSettingsPartialToSettingsTable,
   mapSettingsTableToDbSettings,
 } from '../utils/settings'
-import { settings } from '../schemas'
+import * as schemas from '../schemas'
 
 const defaultSettings: SettingsTable = {
   id: 1,
@@ -33,5 +33,5 @@ export async function updateSettings(update: Partial<DbSettings>) {
   await getDrizzle()
     .update(settings)
     .set(settingsTable)
-    .where(eq(settings.id, defaultSettings.id))
+    .where(eq(schemas.settings.id, defaultSettings.id))
 }

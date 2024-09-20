@@ -1,15 +1,15 @@
-import { getDatabase } from './database'
+import { getDrizzle } from './database'
 import type { AlbumArtists } from '../../types/album-artists'
+import * as schemas from '../schemas'
 
-export async function getAlbumArtists() {
-  return getDatabase()('album_artists')
+export function getAlbumArtists() {
+  return getDrizzle().query.albumsToArtists.findMany()
 }
 
 export async function addAlbumArtists(albumArtists: AlbumArtists[]) {
-  // https://knexjs.org/guide/utility.html#batchinsert
-  return getDatabase().batchInsert('album_artists', albumArtists, 500)
+  await getDrizzle().insert(schemas.albumsToArtists).values(albumArtists)
 }
 
 export async function clearAlbumArtists() {
-  return getDatabase()('album_artists').delete()
+  await getDrizzle().delete(schemas.albumsToArtists)
 }

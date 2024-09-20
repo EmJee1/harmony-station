@@ -1,56 +1,65 @@
-import { eq } from 'drizzle-orm'
-import { getDatabase, getDrizzle } from './database'
+import { eq, like } from 'drizzle-orm'
+import { getDrizzle } from './database'
 import type { Album, DbAlbum } from '../../types/albums'
-import type { DbTrack } from '../../types/tracks'
-import type { DbArtist } from '../../types/artist'
-import { albums } from '../schemas'
+import * as schemas from '../schemas'
 
 export async function getAlbum(id: number) {
   return getDrizzle().query.albums.findFirst({
-    where: eq(albums.id, id),
+    where: eq(schemas.albums.id, id),
   })
 }
 
-export async function getTracksInAlbum(id: number): Promise<DbTrack[]> {
-  const result: (DbTrack & { artistName: string; artistId: number })[] =
-    await getDatabase()('album_tracks')
-      .innerJoin('tracks', 'tracks.id', 'album_tracks.trackId')
-      .innerJoin('track_artists', 'track_artists.trackId', 'tracks.id')
-      .innerJoin('artists', 'artists.id', 'track_artists.artistId')
-      .where('album_tracks.albumId', id)
-      .select('tracks.*', {
-        artistId: 'artists.id',
-        artistName: 'artists.name',
-      })
+export async function getFullAlbum(id: number): Promise<DbAlbum | null> {
+  const album = await getDrizzle().query.albums.findFirst({
+    where: eq(schemas.albums.id, id),
+    with: {
+      albumsToTracks: {
+        with: {
+          track: {
+            with: {
+              tracksToArtists: {
+                with: {
+                  artist: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      albumsToArtists: {
+        with: {
+          artist: true,
+        },
+      },
+    },
+  })
 
-  return result.reduce<DbTrack[]>((acc, currentValue) => {
-    const { artistName, artistId, ...rest } = currentValue
-    let currentIndex = acc.findIndex(track => track.id === rest.id)
-    if (currentIndex === -1) {
-      currentIndex = acc.push({ ...rest, artists: [] }) - 1
-    }
+  if (!album) {
+    return null
+  }
 
-    acc[currentIndex].artists!.push({
-      name: artistName,
-      id: artistId,
-    })
-
-    return acc
-  }, [])
-}
-
-export async function getAlbumArtistsInAlbum(id: number): Promise<DbArtist[]> {
-  return getDatabase()('album_artists')
-    .where({ albumId: id })
-    .join('artists', 'album_artists.artistId', 'artists.id')
-    .select('artists.*')
+  return {
+    id: album.id,
+    title: album.title,
+    cover: album.cover,
+    tracks: album.albumsToTracks
+      .map(at => at.track)
+      .map(t => ({
+        ...t,
+        artists: t.tracksToArtists.map(ta => ta.artist),
+      })),
+    albumArtists: album.albumsToArtists.map(aa => aa.artist),
+  }
 }
 
 export async function searchAlbums(
   query: string,
   limit = 10
 ): Promise<DbAlbum[]> {
-  return getDatabase()('albums').whereLike('title', `%${query}%`).limit(limit)
+  return getDrizzle().query.albums.findMany({
+    where: like(schemas.albums.title, `%${query}%`),
+    limit,
+  })
 }
 
 export async function getAlbums(limit?: number) {

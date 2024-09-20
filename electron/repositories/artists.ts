@@ -1,21 +1,29 @@
-import { eq } from 'drizzle-orm'
-import { getDatabase, getDrizzle } from './database'
+import { eq, like } from 'drizzle-orm'
+import { getDrizzle } from './database'
 import type { Artist, DbArtist } from '../../types/artist'
-import { artists } from '../schemas'
+import * as schemas from '../schemas'
 
 export async function getArtist(id: number) {
   return getDrizzle().query.artists.findFirst({
-    where: eq(artists.id, id),
+    where: eq(schemas.artists.id, id),
   })
 }
 
 export async function getFullArtist(id: number): Promise<DbArtist> {
   const result = await getDrizzle().query.artists.findFirst({
-    where: eq(artists.id, id),
+    where: eq(schemas.artists.id, id),
     with: {
       tracksToArtists: {
         with: {
-          track: true,
+          track: {
+            with: {
+              tracksToArtists: {
+                with: {
+                  artist: true,
+                },
+              },
+            },
+          },
         },
       },
       albumsToArtists: {
@@ -33,7 +41,12 @@ export async function getFullArtist(id: number): Promise<DbArtist> {
   return {
     id: result.id,
     name: result.name,
-    tracks: result.tracksToArtists.map(ta => ta.track),
+    tracks: result.tracksToArtists
+      .map(ta => ta.track)
+      .map(t => ({
+        ...t,
+        artists: t.tracksToArtists.map(ta => ta.artist),
+      })),
     albums: result.albumsToArtists.map(aa => aa.album),
   }
 }
@@ -43,13 +56,16 @@ export function getArtists() {
 }
 
 export async function searchArtists(query: string, limit = 10) {
-  return getDatabase()('artists').whereLike('name', `%${query}%`).limit(limit)
+  return getDrizzle().query.artists.findMany({
+    where: like(schemas.artists.name, `%${query}%`),
+    limit,
+  })
 }
 
 export async function addArtists(artistsToInsert: Artist[]) {
-  await getDrizzle().insert(artists).values(artistsToInsert)
+  await getDrizzle().insert(schemas.artists).values(artistsToInsert)
 }
 
 export async function clearArtists() {
-  await getDrizzle().delete(artists)
+  await getDrizzle().delete(schemas.artists)
 }

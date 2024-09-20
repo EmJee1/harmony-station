@@ -3,7 +3,7 @@ import { relations } from 'drizzle-orm'
 import { albums, tracks } from '.'
 
 export const albumsToTracks = sqliteTable('album_tracks', {
-  albumId: integer('id')
+  albumId: integer('albumId')
     .notNull()
     .references(() => albums.id),
   trackId: integer('trackId')

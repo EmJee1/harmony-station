@@ -1,41 +1,41 @@
+import { like } from 'drizzle-orm'
 import type { DbTrack, Track } from '../../types/tracks'
-import { getDatabase, getDrizzle } from './database'
-import { tracks } from '../schemas'
+import { getDrizzle } from './database'
+import * as schemas from '../schemas'
 
 export async function getTracks() {
   return getDrizzle().query.tracks.findMany()
 }
 
 export async function addTracks(tracksToInsert: Track[]) {
-  await getDrizzle().insert(tracks).values(tracksToInsert)
+  await getDrizzle().insert(schemas.tracks).values(tracksToInsert)
 }
 
 export async function clearTracks() {
-  await getDrizzle().delete(tracks)
+  await getDrizzle().delete(schemas.tracks)
 }
 
 export async function searchTracks(
   query: string,
   limit = 10
 ): Promise<DbTrack[]> {
-  const tracks = (await getDatabase()('tracks')
-    .whereLike('tracks.title', `%${query}%`)
-    .innerJoin('album_tracks', 'album_tracks.trackId', 'tracks.id')
-    .innerJoin('albums', 'albums.id', 'album_tracks.albumId')
-    .select('tracks.*', {
-      albumId: 'albums.id',
-      albumTitle: 'albums.title',
-    })
-    .limit(limit)) as (DbTrack & { albumId: number; albumTitle: string })[]
-
-  return tracks.map<DbTrack>(track => {
-    const { albumId, albumTitle, ...trackRest } = track
-    return {
-      ...trackRest,
-      album: {
-        id: albumId,
-        title: albumTitle,
+  const tracks = await getDrizzle().query.tracks.findMany({
+    limit,
+    where: like(schemas.tracks.title, `%${query}%`),
+    with: {
+      albumsToTracks: {
+        with: {
+          album: true,
+        },
       },
-    }
+    },
   })
+
+  return tracks.map(t => ({
+    id: t.id,
+    path: t.path,
+    title: t.title,
+    year: t.year,
+    album: t.albumsToTracks.at(0)?.album,
+  }))
 }

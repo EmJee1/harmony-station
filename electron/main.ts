@@ -38,10 +38,8 @@ import {
 import {
   addAlbums,
   clearAlbums,
-  getAlbum,
-  getAlbumArtistsInAlbum,
   getAlbums,
-  getTracksInAlbum,
+  getFullAlbum,
   searchAlbums,
 } from './repositories/albums'
 import { addAlbumTracks, clearAlbumTracks } from './repositories/albumTracks'
@@ -120,14 +118,7 @@ app
       return getAlbums(limit)
     })
     ipcMain.handle('get:album', async (_: IpcMainInvokeEvent, id: number) => {
-      const album = await getAlbum(id)
-      if (!album) {
-        return null
-      }
-
-      album.tracks = await getTracksInAlbum(id)
-      album.albumArtists = await getAlbumArtistsInAlbum(id)
-      return album
+      return getFullAlbum(id)
     })
     ipcMain.handle('get:artist', (_: IpcMainInvokeEvent, id: number) => {
       return getFullArtist(id)
