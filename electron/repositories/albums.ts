@@ -1,8 +1,8 @@
 import { eq, like } from 'drizzle-orm'
 import { getDrizzle } from './database'
 import type { Album, DbAlbum } from '../../types/albums'
+import { mapQueriedAlbumToAlbum } from '../utils/drizzle'
 import * as schemas from '../schemas'
-import { genresToTracks } from '../schemas'
 
 export async function getAlbum(id: number) {
   return getDrizzle().query.albums.findFirst({
@@ -44,19 +44,7 @@ export async function getFullAlbum(id: number): Promise<DbAlbum | null> {
     return null
   }
 
-  return {
-    id: album.id,
-    title: album.title,
-    cover: album.cover,
-    tracks: album.albumsToTracks
-      .map(at => at.track)
-      .map(t => ({
-        ...t,
-        artists: t.tracksToArtists.map(ta => ta.artist),
-        genres: t.genresToTracks.map(gt => gt.genre),
-      })),
-    albumArtists: album.albumsToArtists.map(aa => aa.artist),
-  }
+  return mapQueriedAlbumToAlbum(album)
 }
 
 export async function searchAlbums(

@@ -2,6 +2,7 @@ import { eq, like } from 'drizzle-orm'
 import { getDrizzle } from './database'
 import type { Artist, DbArtist } from '../../types/artist'
 import * as schemas from '../schemas'
+import { mapQueriedArtistToArtist } from '../utils/drizzle'
 
 export async function getArtist(id: number) {
   return getDrizzle().query.artists.findFirst({
@@ -38,17 +39,7 @@ export async function getFullArtist(id: number): Promise<DbArtist> {
     return null
   }
 
-  return {
-    id: result.id,
-    name: result.name,
-    tracks: result.tracksToArtists
-      .map(ta => ta.track)
-      .map(t => ({
-        ...t,
-        artists: t.tracksToArtists.map(ta => ta.artist),
-      })),
-    albums: result.albumsToArtists.map(aa => aa.album),
-  }
+  return mapQueriedArtistToArtist(result)
 }
 
 export function getArtists() {
