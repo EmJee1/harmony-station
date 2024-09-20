@@ -6,6 +6,7 @@ import { drizzle } from 'drizzle-orm/better-sqlite3'
 import { getValueForEnvironment } from '../utils/environment'
 import * as schema from '../schemas'
 
+// TODO: replace the table creation logic with Drizzle
 export function getDatabase() {
   const dbPath = getValueForEnvironment({
     development: './.data',

@@ -1,6 +1,6 @@
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core'
 import { relations } from 'drizzle-orm'
-import { albumsToTracks, tracksToArtists } from '.'
+import { albumsToTracks, genresToTracks, tracksToArtists } from '.'
 
 export const tracks = sqliteTable('tracks', {
   id: integer('id').primaryKey({ autoIncrement: true }),
@@ -12,4 +12,5 @@ export const tracks = sqliteTable('tracks', {
 export const tracksRelations = relations(tracks, ({ many }) => ({
   albumsToTracks: many(albumsToTracks),
   tracksToArtists: many(tracksToArtists),
+  genresToTracks: many(genresToTracks),
 }))

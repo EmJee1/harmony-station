@@ -1,15 +1,15 @@
-import { getDatabase } from './database'
+import { getDrizzle } from './database'
 import type { GenreTracks } from '../../types/genre-tracks'
+import * as schemas from '../schemas'
 
 export async function getGenreTracks() {
-  return getDatabase()('genre_tracks')
+  return getDrizzle().query.genresToTracks.findMany()
 }
 
 export async function addGenreTracks(genreTracks: GenreTracks[]) {
-  // https://knexjs.org/guide/utility.html#batchinsert
-  return getDatabase().batchInsert('genre_tracks', genreTracks, 500)
+  await getDrizzle().insert(schemas.genresToTracks).values(genreTracks)
 }
 
 export async function clearGenreTracks() {
-  return getDatabase()('genre_tracks').delete()
+  await getDrizzle().delete(schemas.genresToTracks)
 }

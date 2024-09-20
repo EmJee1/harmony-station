@@ -15,4 +15,5 @@ export interface SettingsTable {
    * Semicolon-separated list of audio directories.
    */
   audioDirectories: string
+  // TODO: scan depth setting
 }

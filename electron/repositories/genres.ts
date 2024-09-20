@@ -1,19 +1,22 @@
-import { getDatabase } from './database'
+import { eq } from 'drizzle-orm'
+import { getDrizzle } from './database'
 import type { Genre } from '../../types/genres'
+import * as schemas from '../schemas'
 
 export async function getGenre(id: number) {
-  return getDatabase()('genres').where({ id }).first()
+  return getDrizzle().query.genres.findFirst({
+    where: eq(schemas.genres.id, id),
+  })
 }
 
 export async function getGenres() {
-  return getDatabase()('genres')
+  return getDrizzle().query.genres.findMany()
 }
 
 export async function addGenres(genres: Genre[]) {
-  // https://knexjs.org/guide/utility.html#batchinsert
-  return getDatabase().batchInsert('genres', genres, 500)
+  await getDrizzle().insert(schemas.genres).values(genres)
 }
 
 export async function clearGenres() {
-  return getDatabase()('genres').delete()
+  return getDrizzle().delete(schemas.genres)
 }
