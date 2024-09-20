@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-argument */
+
 import type { InferSelectModel } from 'drizzle-orm'
 import type { DbTrack } from '../../types/tracks'
 import type { DbGenre } from '../../types/genres'

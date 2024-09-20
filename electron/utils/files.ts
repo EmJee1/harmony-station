@@ -1,4 +1,4 @@
-import readdirp, { ReaddirpOptions } from 'readdirp'
+import readdirp, { type ReaddirpOptions } from 'readdirp'
 
 const TRACK_FILE_EXTENSIONS = ['mp3', 'flac']
 const TRACK_SCAN_DEPTH = 5
